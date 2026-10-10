@@ -1,0 +1,66 @@
+---
+import Card from '@/components/ui/Card.astro';
+import Grid from '@/components/ui/Grid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { audiences, audienceSection } from '@/content/audiences';
+---
+
+<Section id="para-quien" tone="alt" labelledby="para-quien-title">
+  <SectionHeader
+    eyebrow={audienceSection.eyebrow}
+    title={audienceSection.title}
+    headingId="para-quien-title"
+  />
+
+  <Grid min="15rem" gap="md" as="ul">
+    {audiences.map((audience) => (
+      <Card as="li" class="audience">
+        <h3 class="audience__title">{audience.title}</h3>
+        <p class="audience__description">{audience.description}</p>
+        <div class="audience__needs">
+          <p class="audience__needs-label">{audienceSection.needsLabel}</p>
+          <p class="audience__needs-text">{audience.needs}</p>
+        </div>
+      </Card>
+    ))}
+  </Grid>
+</Section>
+
+<style>
+  .audience {
+    gap: 0.875rem;
+  }
+
+  .audience__title {
+    font-size: 1.3125rem;
+    line-height: 1.2;
+  }
+
+  .audience__description {
+    flex: 1 1 auto;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  .audience__needs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .audience__needs-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .audience__needs-text {
+    font-size: var(--text-base-sm);
+    line-height: 1.5;
+  }
+</style>

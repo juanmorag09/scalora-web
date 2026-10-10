@@ -1,0 +1,81 @@
+---
+interface Props {
+  /** Con `href` se renderiza un enlace; sin él, un botón. */
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
+  class?: string | undefined;
+}
+
+const { href, variant = 'primary', size = 'lg', type = 'button', class: className } = Astro.props;
+const classes = ['button', `button--${variant}`, `button--${size}`, className];
+---
+
+{href ? (
+  <a href={href} class:list={classes}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class:list={classes}>
+    <slot />
+  </button>
+)}
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      filter var(--duration-fast) var(--ease-out);
+  }
+
+  .button--md {
+    min-height: var(--tap-target);
+    padding-inline: var(--space-5);
+    font-size: var(--text-base-sm);
+  }
+
+  .button--lg {
+    min-height: 3.25rem;
+    padding-inline: 1.625rem;
+    font-size: var(--text-base);
+  }
+
+  .button--primary,
+  .button--primary:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .button--primary:hover {
+    filter: brightness(1.08);
+  }
+
+  .button--secondary,
+  .button--secondary:hover {
+    background: transparent;
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+  }
+
+  .button--secondary:hover {
+    border-color: var(--color-text-faint);
+    background: var(--color-surface);
+  }
+
+  .button[disabled] {
+    cursor: progress;
+    opacity: 0.7;
+  }
+</style>

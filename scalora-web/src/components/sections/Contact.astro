@@ -1,0 +1,163 @@
+---
+import { PUBLIC_CONTACT_EMAIL, PUBLIC_CONTACT_ENDPOINT } from 'astro:env/client';
+import Button from '@/components/ui/Button.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import FormField from '@/components/ui/FormField.astro';
+import Section from '@/components/ui/Section.astro';
+import Split from '@/components/ui/Split.astro';
+import { contactForm, contactSection } from '@/content/contact';
+import { FIELD_LIMITS, HONEYPOT_FIELD } from '@/lib/contact-form';
+
+const { fields } = contactForm;
+---
+
+<Section id="contacto" tone="alt" labelledby="contacto-title">
+  <Split>
+    <Fragment slot="aside">
+      <Eyebrow>{contactSection.eyebrow}</Eyebrow>
+      <h2 id="contacto-title" class="contact__title">
+        {contactSection.title}
+      </h2>
+      <p class="contact__lead">{contactSection.lead}</p>
+      {PUBLIC_CONTACT_EMAIL && (
+        <p class="contact__email">
+          {contactSection.emailLead}{' '}
+          <a class="contact__email-link" href={`mailto:${PUBLIC_CONTACT_EMAIL}`}>
+            {PUBLIC_CONTACT_EMAIL}
+          </a>
+        </p>
+      )}
+    </Fragment>
+
+    <form
+      class="contact-form"
+      method="post"
+      action={PUBLIC_CONTACT_ENDPOINT}
+      aria-labelledby="contacto-title"
+      data-contact-form
+      data-endpoint={PUBLIC_CONTACT_ENDPOINT ?? ''}
+    >
+      <FormField
+        id="contact-name"
+        name="name"
+        label={fields.name.label}
+        placeholder={fields.name.placeholder}
+        autocomplete="name"
+        maxlength={FIELD_LIMITS.name.max}
+      />
+      <FormField
+        id="contact-email"
+        name="email"
+        type="email"
+        label={fields.email.label}
+        placeholder={fields.email.placeholder}
+        autocomplete="email"
+        maxlength={FIELD_LIMITS.email.max}
+      />
+      <FormField
+        id="contact-message"
+        name="message"
+        type="textarea"
+        label={fields.message.label}
+        placeholder={fields.message.placeholder}
+        maxlength={FIELD_LIMITS.message.max}
+      />
+
+      {/* Trampa para bots: las personas no ven ni alcanzan este campo. */}
+      <div class="contact-form__trap" aria-hidden="true">
+        <label>
+          No completar este campo
+          <input type="text" name={HONEYPOT_FIELD} tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
+
+      <div class="contact-form__footer">
+        <Button type="submit">{contactForm.submit}</Button>
+        <p class="contact-form__status" role="status" data-form-status></p>
+      </div>
+    </form>
+  </Split>
+</Section>
+
+<script>
+  import { initContactForm } from '@/scripts/contact-form';
+
+  initContactForm();
+</script>
+
+<style>
+  .contact__title {
+    font-size: var(--text-h2);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .contact__lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .contact__email {
+    color: var(--color-text-muted);
+  }
+
+  .contact__email-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .contact-form__trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .contact-form__status {
+    flex: 1 1 14rem;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .contact-form__status:empty {
+    display: none;
+  }
+
+  .contact-form__status[data-state='success'] {
+    color: var(--color-success);
+  }
+
+  .contact-form__status[data-state='error'] {
+    color: var(--color-danger);
+  }
+
+  @media (max-width: 30rem) {
+    .contact-form {
+      padding: var(--space-5);
+    }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import Card from '@/components/ui/Card.astro';
+import Grid from '@/components/ui/Grid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import Statement from '@/components/ui/Statement.astro';
+import { processSection, processSteps } from '@/content/process';
+---
+
+<Section id="proceso" labelledby="proceso-title">
+  <SectionHeader
+    eyebrow={processSection.eyebrow}
+    title={processSection.title}
+    lead={processSection.lead}
+    headingId="proceso-title"
+  />
+
+  <Grid min="20rem" as="ol">
+    {processSteps.map((step) => (
+      <Card as="li" class="step">
+        <span class="step__number" aria-hidden="true">
+          {step.number}
+        </span>
+        <h3 class="step__title">{step.title}</h3>
+        <p class="step__description">{step.description}</p>
+      </Card>
+    ))}
+  </Grid>
+
+  <Statement lead={processSection.closing.lead} highlight={processSection.closing.highlight} />
+</Section>
+
+<style>
+  .step {
+    gap: 0.875rem;
+  }
+
+  .step__number {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+
+  .step__title {
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+  }
+
+  .step__description {
+    color: var(--color-text-muted);
+  }
+</style>

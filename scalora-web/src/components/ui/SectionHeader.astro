@@ -1,0 +1,51 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** id del <h2>; la sección lo referencia con aria-labelledby. */
+  headingId: string;
+  lead?: string;
+  width?: 'default' | 'wide' | 'full';
+}
+
+const { eyebrow, title, headingId, lead, width = 'default' } = Astro.props;
+---
+
+<header class:list={['section-header', `section-header--${width}`]}>
+  <Eyebrow>{eyebrow}</Eyebrow>
+  <h2 id={headingId} class="section-header__title">
+    {title}
+  </h2>
+  {lead && <p class="section-header__lead">{lead}</p>}
+  <slot />
+</header>
+
+<style>
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    max-width: 47.5rem;
+  }
+
+  .section-header--wide {
+    max-width: 53.75rem;
+  }
+
+  .section-header--full {
+    max-width: none;
+  }
+
+  .section-header__title {
+    font-size: var(--text-h2);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .section-header__lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+</style>

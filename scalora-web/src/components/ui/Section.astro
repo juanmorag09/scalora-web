@@ -1,0 +1,43 @@
+---
+import Container from './Container.astro';
+
+interface Props {
+  id: string;
+  /** `alt` alterna el fondo para separar secciones consecutivas. */
+  tone?: 'default' | 'alt';
+  width?: 'default' | 'narrow';
+  /** id del encabezado que nombra la sección para lectores de pantalla. */
+  labelledby?: string;
+}
+
+const { id, tone = 'default', width = 'default', labelledby } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={['section', tone === 'alt' && 'section--alt']}
+  aria-labelledby={labelledby}
+>
+  <Container width={width}>
+    <div class="section__body">
+      <slot />
+    </div>
+  </Container>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-section);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .section__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .section--alt {
+    background: var(--color-bg-alt);
+  }
+</style>

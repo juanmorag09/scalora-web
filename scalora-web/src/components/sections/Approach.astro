@@ -1,0 +1,54 @@
+---
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import Section from '@/components/ui/Section.astro';
+import Statement from '@/components/ui/Statement.astro';
+import { approach } from '@/content/approach';
+---
+
+<Section id="enfoque" tone="alt" width="narrow" labelledby="enfoque-title">
+  <div class="approach">
+    <Eyebrow>{approach.eyebrow}</Eyebrow>
+    <p class="approach__rejected">
+      {approach.rejected.lead}{' '}
+      <s class="approach__rejected-question">{approach.rejected.question}</s>
+    </p>
+    <h2 id="enfoque-title" class="approach__question">
+      {approach.question}
+    </h2>
+    <p class="approach__body">{approach.body}</p>
+    <div class="approach__closing">
+      <Statement lead={approach.closing.lead} highlight={approach.closing.highlight} />
+    </div>
+  </div>
+</Section>
+
+<style>
+  .approach {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding-block: var(--space-2);
+  }
+
+  .approach__rejected {
+    font-size: var(--text-xl);
+    line-height: 1.5;
+    color: var(--color-text-faint);
+  }
+
+  .approach__question {
+    font-size: var(--text-display);
+    line-height: 1.06;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .approach__body {
+    max-width: 43.75rem;
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .approach__closing {
+    margin-top: var(--space-2);
+  }
+</style>

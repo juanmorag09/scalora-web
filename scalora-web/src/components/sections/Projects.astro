@@ -1,0 +1,140 @@
+---
+import Card from '@/components/ui/Card.astro';
+import Grid from '@/components/ui/Grid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { projects, projectsSection } from '@/content/projects';
+import { withBase } from '@/lib/url';
+---
+
+<Section id="proyectos" tone="alt" labelledby="proyectos-title">
+  <SectionHeader
+    eyebrow={projectsSection.eyebrow}
+    title={projectsSection.title}
+    lead={projectsSection.lead}
+    headingId="proyectos-title"
+  />
+
+  <Grid min="20rem" as="ul">
+    {projects.map((project) => (
+      <Card as="li" padding="none" class="project">
+        <div class="project__media">
+          {project.image ? (
+            <img
+              class="project__image"
+              src={withBase(project.image)}
+              alt={`Captura de ${project.name}`}
+              width="640"
+              height="400"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <span class="project__image-placeholder">{projectsSection.imagePlaceholder}</span>
+          )}
+        </div>
+        <div class="project__body">
+          <p class="project__category">{project.category}</p>
+          <h3 class="project__name">{project.name}</h3>
+          <p class="project__description">{project.description}</p>
+          <ul class="project__stack" role="list" aria-label="Tecnologías">
+            {project.stack.map((tech) => (
+              <li class="project__tech">{tech}</li>
+            ))}
+          </ul>
+          {project.url && (
+            <a class="project__link" href={project.url} target="_blank" rel="noopener noreferrer">
+              {projectsSection.linkLabel}
+              <span class="visually-hidden">: {project.name} (se abre en una pestaña nueva)</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </div>
+      </Card>
+    ))}
+  </Grid>
+</Section>
+
+<style>
+  .project__media {
+    margin: 0.875rem 0.875rem 0;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .project__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project__image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: inherit;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  .project__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6) 1.625rem var(--space-7);
+  }
+
+  .project__category {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .project__name {
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+  }
+
+  .project__description {
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  .project__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .project__tech {
+    padding: 0.3125rem 0.625rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--color-text-muted);
+  }
+
+  .project__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    min-height: var(--tap-target);
+    font-size: var(--text-base-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .project__link:hover {
+    color: var(--color-accent);
+  }
+</style>

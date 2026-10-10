@@ -1,0 +1,161 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Logo from '@/components/ui/Logo.astro';
+import { contactLink, primaryNav, site } from '@/config/site';
+import { visibleLinks } from '@/lib/navigation';
+import { hiddenAnchors } from '@/lib/sections';
+
+const links = visibleLinks(primaryNav, hiddenAnchors);
+---
+
+<header class="site-header">
+  <Container>
+    <div class="site-header__inner">
+      <a class="site-header__brand" href="#inicio" aria-label={`${site.name}, ir al inicio`}>
+        <Logo />
+      </a>
+
+      <nav class="site-nav" id="primary-nav" aria-label="Principal" data-nav>
+        <ul class="site-nav__list" role="list">
+          {links.map((link) => (
+            <li>
+              <a class="site-nav__link" href={link.href}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <Button href={contactLink.href} variant="secondary" size="md">
+          {contactLink.label}
+        </Button>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          data-nav-toggle
+          hidden
+        >
+          <span class="visually-hidden" data-nav-toggle-label>
+            Abrir menú
+          </span>
+          <span class="nav-toggle__icon nav-toggle__icon--open">
+            <Icon name="menu" size={24} />
+          </span>
+          <span class="nav-toggle__icon nav-toggle__icon--close">
+            <Icon name="close" size={24} />
+          </span>
+        </button>
+      </div>
+    </div>
+  </Container>
+</header>
+
+<script>
+  import { initMobileNav } from '@/scripts/mobile-nav';
+
+  initMobileNav();
+</script>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-8);
+    padding-block: 0.875rem;
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-7);
+    margin: 0;
+  }
+
+  .site-nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+    padding-inline: 2px;
+    font-size: var(--text-base-sm);
+    font-weight: 500;
+  }
+
+  .nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-target);
+    height: var(--tap-target);
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .nav-toggle__icon--close,
+  .nav-toggle[aria-expanded='true'] .nav-toggle__icon--open {
+    display: none;
+  }
+
+  .nav-toggle[aria-expanded='true'] .nav-toggle__icon--close {
+    display: block;
+  }
+
+  /* Móvil: el menú pasa a un panel desplegable debajo de la barra. */
+  @media (max-width: 47.9375rem) {
+    .nav-toggle {
+      display: inline-flex;
+    }
+
+    .site-nav {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    .site-nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding-block: var(--space-2);
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .site-nav__link {
+      width: 100%;
+      min-height: 3rem;
+      font-size: var(--text-md);
+    }
+
+    /* Solo se oculta si hay JavaScript para volver a abrirlo. */
+    :global(.js) .site-nav:not([data-open='true']) {
+      display: none;
+    }
+  }
+</style>

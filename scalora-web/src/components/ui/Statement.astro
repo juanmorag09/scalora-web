@@ -1,0 +1,27 @@
+---
+interface Props {
+  lead: string;
+  /** Segunda frase, resaltada con el color de marca. */
+  highlight?: string;
+}
+
+const { lead, highlight } = Astro.props;
+---
+
+<p class="statement">
+  {lead} {highlight && <span class="statement__highlight">{highlight}</span>}
+</p>
+
+<style>
+  .statement {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-2xl);
+    line-height: 1.35;
+    color: var(--color-text);
+  }
+
+  .statement__highlight {
+    color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+dist-e2e/
+.astro/
+.env
+.env.*
+!.env.example
+test-results/
+playwright-report/
+coverage/
+.DS_Store
+*.log
+.vitest/

@@ -1,0 +1,98 @@
+---
+import Card from '@/components/ui/Card.astro';
+import Grid from '@/components/ui/Grid.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { services, servicesSection } from '@/content/services';
+---
+
+<Section id="servicios" labelledby="servicios-title">
+  <SectionHeader
+    eyebrow={servicesSection.eyebrow}
+    title={servicesSection.title}
+    lead={servicesSection.lead}
+    headingId="servicios-title"
+  />
+
+  <Grid min="27.5rem" as="ul">
+    {services.map((service) => (
+      <Card as="li" padding="lg" class="service">
+        <span class="service__icon">
+          <Icon name={service.icon} />
+        </span>
+        <div class="service__copy">
+          <h3 class="service__title">{service.title}</h3>
+          <p class="service__summary">{service.summary}</p>
+        </div>
+        <ul class="service__items" role="list">
+          {service.items.map((item) => (
+            <li class="service__item">{item}</li>
+          ))}
+        </ul>
+      </Card>
+    ))}
+  </Grid>
+</Section>
+
+<style>
+  .service {
+    gap: var(--space-5);
+  }
+
+  .service__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.875rem;
+    height: 2.875rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: 0.75rem;
+    color: var(--color-accent);
+  }
+
+  .service__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .service__title {
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+  }
+
+  .service__summary {
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  .service__items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem var(--space-5);
+    margin: 0;
+    font-size: var(--text-base-sm);
+    line-height: 1.4;
+  }
+
+  .service__item {
+    display: flex;
+    gap: 0.625rem;
+  }
+
+  .service__item::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    margin-top: 0.5rem;
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 26rem) {
+    .service__items {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,84 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Logo from '@/components/ui/Logo.astro';
+import { footerNav, site } from '@/config/site';
+import { visibleLinks } from '@/lib/navigation';
+import { hiddenAnchors } from '@/lib/sections';
+
+const links = visibleLinks(footerNav, hiddenAnchors);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <Container>
+    <div class="site-footer__inner">
+      <div class="site-footer__brand">
+        <Logo />
+        <p class="site-footer__tagline">{site.tagline}</p>
+        <p class="site-footer__legal">
+          {site.slogan} © {year} {site.name}.
+        </p>
+      </div>
+      <nav aria-label="Pie de página">
+        <ul class="site-footer__list" role="list">
+          {links.map((link) => (
+            <li>
+              <a class="site-footer__link" href={link.href}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-7) var(--space-12);
+    padding-block: var(--space-12) var(--space-14);
+  }
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+
+  .site-footer__tagline {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .site-footer__legal {
+    font-size: var(--text-base-sm);
+    color: var(--color-text-faint);
+  }
+
+  .site-footer__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-7);
+    margin: 0;
+  }
+
+  .site-footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target);
+    padding-inline: 2px;
+    font-size: var(--text-base-sm);
+    font-weight: 500;
+  }
+</style>

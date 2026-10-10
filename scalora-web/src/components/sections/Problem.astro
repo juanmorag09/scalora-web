@@ -1,0 +1,81 @@
+---
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import Section from '@/components/ui/Section.astro';
+import Split from '@/components/ui/Split.astro';
+import Statement from '@/components/ui/Statement.astro';
+import { problems, problemSection } from '@/content/problem';
+
+const pad = (index: number) => String(index + 1).padStart(2, '0');
+---
+
+<Section id="problema" tone="alt" labelledby="problema-title">
+  <Split>
+    <Fragment slot="aside">
+      <Eyebrow>{problemSection.eyebrow}</Eyebrow>
+      <h2 id="problema-title" class="problem__title">
+        {problemSection.title}
+      </h2>
+      <p class="problem__lead">{problemSection.lead}</p>
+      <div class="problem__closing">
+        <Statement lead={problemSection.closing} />
+      </div>
+    </Fragment>
+
+    <ol class="problem__list" role="list">
+      {problems.map((problem, index) => (
+        <li class="problem__item">
+          <span class="problem__index" aria-hidden="true">
+            {pad(index)}
+          </span>
+          <span>{problem}</span>
+        </li>
+      ))}
+    </ol>
+  </Split>
+</Section>
+
+<style>
+  .problem__title {
+    font-size: var(--text-h2);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .problem__lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .problem__closing {
+    margin-top: var(--space-3);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .problem__list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .problem__item {
+    display: flex;
+    align-items: baseline;
+    gap: 1.125rem;
+    padding-block: 0.8125rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    font-size: var(--text-md);
+    line-height: 1.4;
+  }
+
+  .problem__item:last-child {
+    border-bottom: 0;
+  }
+
+  .problem__index {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+</style>

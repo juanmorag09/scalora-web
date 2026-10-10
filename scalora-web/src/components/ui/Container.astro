@@ -1,0 +1,25 @@
+---
+interface Props {
+  width?: 'default' | 'narrow';
+  class?: string | undefined;
+}
+
+const { width = 'default', class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['container', width === 'narrow' && 'container--narrow', className]} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .container--narrow {
+    max-width: var(--container-narrow);
+  }
+</style>

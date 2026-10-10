@@ -1,0 +1,55 @@
+---
+import Grid from '@/components/ui/Grid.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { aboutSection, principles } from '@/content/about';
+---
+
+<Section id="nosotros" labelledby="nosotros-title">
+  <SectionHeader
+    eyebrow={aboutSection.eyebrow}
+    title={aboutSection.title}
+    headingId="nosotros-title"
+    width="wide"
+  />
+
+  <Grid min="20rem" as="ul">
+    {principles.map((principle) => (
+      <li class="principle">
+        <h3 class="principle__label">{principle.label}</h3>
+        <p class="principle__statement">{principle.statement}</p>
+        <p class="principle__detail">{principle.detail}</p>
+      </li>
+    ))}
+  </Grid>
+</Section>
+
+<style>
+  .principle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding-top: 1.375rem;
+    border-top: 1px solid var(--color-border-strong);
+  }
+
+  .principle__label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .principle__statement {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-xl);
+    line-height: 1.35;
+  }
+
+  .principle__detail {
+    color: var(--color-text-muted);
+  }
+</style>

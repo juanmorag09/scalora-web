@@ -1,0 +1,30 @@
+---
+interface Props {
+  /** Ancho mínimo de columna (longitud CSS). Las columnas se reparten solas. */
+  min: string;
+  as?: 'div' | 'ul' | 'ol';
+  gap?: 'md' | 'lg';
+}
+
+const { min, as: Tag = 'div', gap = 'lg' } = Astro.props;
+const role = Tag === 'div' ? undefined : 'list';
+---
+
+<Tag class:list={['grid', `grid--gap-${gap}`]} style={`--grid-min: ${min}`} role={role}>
+  <slot />
+</Tag>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-min)), 1fr));
+  }
+
+  .grid--gap-md {
+    gap: var(--space-5);
+  }
+
+  .grid--gap-lg {
+    gap: var(--space-6);
+  }
+</style>

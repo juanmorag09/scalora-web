@@ -1,0 +1,53 @@
+---
+---
+
+<span class="logo">
+  <span class="logo__mark" aria-hidden="true">
+    <span class="logo__bar logo__bar--1"></span>
+    <span class="logo__bar logo__bar--2"></span>
+    <span class="logo__bar logo__bar--3"></span>
+  </span>
+  <span class="logo__word">SCALORA</span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-text);
+  }
+
+  .logo__mark {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 1.25rem;
+  }
+
+  .logo__bar {
+    display: block;
+    width: 5px;
+    background: var(--color-text);
+  }
+
+  .logo__bar--1 {
+    height: 40%;
+  }
+
+  .logo__bar--2 {
+    height: 70%;
+  }
+
+  .logo__bar--3 {
+    height: 100%;
+    background: var(--color-accent);
+  }
+
+  .logo__word {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: 0.14em;
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+interface Props {
+  as?: 'article' | 'div' | 'li';
+  padding?: 'none' | 'md' | 'lg';
+  class?: string | undefined;
+}
+
+const { as: Tag = 'article', padding = 'md', class: className, ...rest } = Astro.props;
+---
+
+<Tag class:list={['card', `card--pad-${padding}`, className]} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .card--pad-md {
+    padding: 1.875rem;
+  }
+
+  .card--pad-lg {
+    padding: 2.125rem;
+  }
+
+  .card--pad-none {
+    overflow: hidden;
+  }
+</style>

@@ -1,0 +1,223 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Container from '@/components/ui/Container.astro';
+import { hero, pillars } from '@/content/hero';
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-title">
+  <Container>
+    <div class="hero__inner">
+      <div class="hero__copy">
+        <p class="hero__badge">
+          <span class="hero__badge-dot" aria-hidden="true"></span>
+          {hero.badge}
+        </p>
+        <h1 id="hero-title" class="hero__title">
+          {hero.title.lead} <span class="hero__title-highlight">{hero.title.highlight}</span>
+        </h1>
+        <p class="hero__lead">{hero.lead}</p>
+        <div class="hero__actions">
+          <Button href={hero.primaryAction.href}>
+            {hero.primaryAction.label}
+            <span aria-hidden="true">→</span>
+          </Button>
+          <Button href={hero.secondaryAction.href} variant="secondary">
+            {hero.secondaryAction.label}
+          </Button>
+        </div>
+        <p class="hero__note">
+          {hero.note.lead} <span class="hero__note-highlight">{hero.note.highlight}</span>
+        </p>
+      </div>
+
+      <ol class="pillars" role="list">
+        {pillars.map((pillar) => (
+          <li class="pillar">
+            <span class="pillar__step">{pillar.step}</span>
+            <span class="pillar__body">
+              <span class="pillar__title">{pillar.title}</span>
+              <span class="pillar__description">{pillar.description}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .hero__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-14) var(--space-16);
+    padding-block: 6.5rem 6rem;
+  }
+
+  .hero__copy {
+    flex: 1.25 1 32.5rem;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-7);
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: var(--space-2) 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .hero__badge-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+
+  .hero__title {
+    font-size: var(--text-h1);
+    line-height: 1.04;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .hero__title-highlight {
+    color: var(--color-accent);
+  }
+
+  .hero__lead {
+    max-width: 38.75rem;
+    font-size: 1.1875rem;
+    color: var(--color-text-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+  }
+
+  .hero__note {
+    line-height: 1.5;
+    color: var(--color-text-faint);
+  }
+
+  .hero__note-highlight {
+    color: var(--color-text);
+  }
+
+  /* Escalera Build → Automate → Scale: la altura creciente es el mensaje. */
+  .pillars {
+    flex: 1 1 23.75rem;
+    min-width: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-3);
+    margin: 0;
+  }
+
+  .pillar {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 10.625rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: 1.125rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .pillar:nth-child(2) {
+    min-height: 16.25rem;
+    background: var(--color-surface-raised);
+    border-color: var(--color-border-muted);
+  }
+
+  .pillar:nth-child(3) {
+    min-height: 21.875rem;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .pillar__step {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  .pillar__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .pillar__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--text-lg);
+    line-height: 1.2;
+  }
+
+  .pillar__description {
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--color-text-muted);
+  }
+
+  .pillar:nth-child(3) .pillar__step,
+  .pillar:nth-child(3) .pillar__description {
+    color: inherit;
+  }
+
+  .pillar:nth-child(3) .pillar__title {
+    font-weight: 700;
+  }
+
+  .pillar:nth-child(3) .pillar__description {
+    font-weight: 500;
+  }
+
+  @media (max-width: 30rem) {
+    .hero__inner {
+      padding-block: 4rem 4.5rem;
+    }
+
+    /* Sin ancho para tres columnas, la escalera crece hacia la derecha. */
+    .pillars {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .pillar,
+    .pillar:nth-child(2),
+    .pillar:nth-child(3) {
+      flex: none;
+      min-height: 0;
+      gap: var(--space-3);
+    }
+
+    .pillar:nth-child(1) {
+      width: 64%;
+    }
+
+    .pillar:nth-child(2) {
+      width: 82%;
+    }
+
+    .pillar:nth-child(3) {
+      width: 100%;
+    }
+  }
+</style>

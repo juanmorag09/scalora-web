@@ -1,0 +1,34 @@
+---
+import Footer from '@/components/layout/Footer.astro';
+import Header from '@/components/layout/Header.astro';
+import About from '@/components/sections/About.astro';
+import Approach from '@/components/sections/Approach.astro';
+import Audience from '@/components/sections/Audience.astro';
+import Contact from '@/components/sections/Contact.astro';
+import Differentiators from '@/components/sections/Differentiators.astro';
+import Hero from '@/components/sections/Hero.astro';
+import Problem from '@/components/sections/Problem.astro';
+import Process from '@/components/sections/Process.astro';
+import Projects from '@/components/sections/Projects.astro';
+import Services from '@/components/sections/Services.astro';
+import { site } from '@/config/site';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { hasProjects } from '@/lib/sections';
+---
+
+<BaseLayout title={site.title}>
+  <Header />
+  <main id="contenido">
+    <Hero />
+    <Problem />
+    <Services />
+    <Approach />
+    <Process />
+    <Audience />
+    <Differentiators />
+    {hasProjects && <Projects />}
+    <About />
+    <Contact />
+  </main>
+  <Footer />
+</BaseLayout>

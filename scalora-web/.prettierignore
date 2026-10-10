@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-e2e
+.astro
+package-lock.json
+playwright-report
+test-results
+public
+.vitest
+coverage
