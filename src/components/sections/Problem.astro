@@ -6,35 +6,73 @@ import Statement from '@/components/ui/Statement.astro';
 import { problems, problemSection } from '@/content/problem';
 
 const pad = (index: number) => String(index + 1).padStart(2, '0');
+const total = pad(problems.length - 1);
 ---
 
+{/*
+  La lista se recorre con el scroll: un problema en foco a la vez, un contador que avanza
+  y, al llegar al último, la respuesta de Scalora se ilumina. Sin JavaScript se ve como
+  una lista normal y completa.
+*/}
 <Section id="problema" tone="alt" labelledby="problema-title">
-  <Split>
-    <Fragment slot="aside">
-      <Eyebrow>{problemSection.eyebrow}</Eyebrow>
-      <h2 id="problema-title" class="problem__title">
-        {problemSection.title}
-      </h2>
-      <p class="problem__lead">{problemSection.lead}</p>
-      <div class="problem__closing">
-        <Statement lead={problemSection.closing} />
-      </div>
-    </Fragment>
+  <div class="problem" data-spotlight>
+    <Split sticky>
+      <Fragment slot="aside">
+        <div data-reveal>
+          <Eyebrow>{problemSection.eyebrow}</Eyebrow>
+        </div>
+        <h2 id="problema-title" class="problem__title" data-reveal="mask">
+          {problemSection.title}
+        </h2>
+        <p class="problem__lead" data-reveal style="--i: 1">
+          {problemSection.lead}
+        </p>
 
-    <ol class="problem__list" role="list">
-      {problems.map((problem, index) => (
-        <li class="problem__item">
-          <span class="problem__index" aria-hidden="true">
-            {pad(index)}
+        <div class="problem__meter" aria-hidden="true" data-reveal style="--i: 2">
+          <p class="problem__count">
+            <span class="problem__count-current" data-spotlight-count>
+              {total}
+            </span>
+            <span class="problem__count-total">/{total}</span>
+          </p>
+          <p class="problem__count-label">{problemSection.counterLabel}</p>
+          <span class="problem__bar">
+            <span class="problem__bar-fill"></span>
           </span>
-          <span>{problem}</span>
-        </li>
-      ))}
-    </ol>
-  </Split>
+        </div>
+
+        <div class="problem__closing" data-reveal style="--i: 3">
+          <Statement lead={problemSection.closing} />
+        </div>
+      </Fragment>
+
+      <ol class="problem__list" role="list">
+        {problems.map((problem, index) => (
+          <li
+            class="problem__item"
+            data-spotlight-item
+            data-reveal="slide"
+            style={`--i: ${index % 3}`}
+          >
+            <span class="problem__index" aria-hidden="true">
+              {pad(index)}
+            </span>
+            <span class="problem__text">{problem}</span>
+          </li>
+        ))}
+      </ol>
+    </Split>
+  </div>
 </Section>
 
 <style>
+  .problem {
+    --spotlight-progress: 1;
+
+    /* Recorta lo que entra desde la derecha sin crear scroll (y sin romper el sticky). */
+    overflow-x: clip;
+  }
+
   .problem__title {
     font-size: var(--text-h2);
     line-height: var(--leading-heading);
@@ -46,12 +84,97 @@ const pad = (index: number) => String(index + 1).padStart(2, '0');
     color: var(--color-text-muted);
   }
 
+  /* ---- Contador: cuántos problemas se han recorrido ---- */
+  .problem__meter {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .problem__count {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .problem__count-current {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-accent);
+  }
+
+  .problem__count-total {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--text-lg);
+    color: var(--color-text-faint);
+  }
+
+  .problem__count-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .problem__bar {
+    display: block;
+    height: 3px;
+    margin-top: var(--space-2);
+    background: var(--color-border-muted);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .problem__bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0.75rem var(--color-accent-glow);
+    scale: var(--spotlight-progress) 1;
+    transform-origin: left center;
+    transition: scale var(--duration-slow) var(--ease-out);
+  }
+
+  /* ---- Respuesta: se ilumina cuando se recorrió toda la lista ---- */
   .problem__closing {
+    position: relative;
     margin-top: var(--space-3);
     padding-top: var(--space-6);
     border-top: 1px solid var(--color-border);
   }
 
+  .problem__closing::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-accent);
+    scale: 0 1;
+    transform-origin: left center;
+    transition: scale 900ms var(--ease-out);
+  }
+
+  .problem__closing :global(.statement) {
+    transition: color var(--duration-slow) var(--ease-out);
+  }
+
+  .problem[data-complete] .problem__closing::before {
+    scale: 1 1;
+  }
+
+  .problem[data-complete] .problem__closing :global(.statement) {
+    color: var(--color-accent);
+  }
+
+  /* ---- Lista ---- */
   .problem__list {
     display: flex;
     flex-direction: column;
@@ -59,12 +182,13 @@ const pad = (index: number) => String(index + 1).padStart(2, '0');
   }
 
   .problem__item {
+    position: relative;
     display: flex;
     align-items: baseline;
-    gap: 1.125rem;
-    padding-block: 0.8125rem;
+    gap: 1.25rem;
+    padding: 1.125rem 0 1.125rem var(--space-5);
     border-bottom: 1px solid var(--color-border-subtle);
-    font-size: var(--text-md);
+    font-size: var(--text-lg);
     line-height: 1.4;
   }
 
@@ -72,10 +196,71 @@ const pad = (index: number) => String(index + 1).padStart(2, '0');
     border-bottom: 0;
   }
 
+  /* Barra de foco a la izquierda: crece en el problema activo. */
+  .problem__item::before {
+    content: '';
+    position: absolute;
+    top: 0.875rem;
+    bottom: 0.875rem;
+    left: 0;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--color-accent);
+    box-shadow: 0 0 0.75rem var(--color-accent-glow);
+    scale: 1 0;
+    transition: scale var(--duration-slow) var(--ease-out);
+  }
+
   .problem__index {
     flex: none;
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--color-text-faint);
+    transition: color var(--duration-slow) var(--ease-out);
+  }
+
+  .problem__text {
+    transition:
+      color var(--duration-slow) var(--ease-out),
+      translate var(--duration-slow) var(--ease-out);
+  }
+
+  /* Con el recorrido activo: el resto queda en segundo plano (texto atenuado pero legible). */
+  .problem[data-spotlight-ready] .problem__text {
+    color: var(--color-text-muted);
+  }
+
+  .problem[data-spotlight-ready] .problem__item[data-passed] .problem__index {
+    color: var(--color-accent);
+  }
+
+  .problem__item[data-current]::before,
+  .problem__item:hover::before {
+    scale: 1 1;
+  }
+
+  .problem__item[data-current] .problem__index,
+  .problem__item:hover .problem__index {
+    color: var(--color-accent);
+  }
+
+  .problem[data-spotlight-ready] .problem__item[data-current] .problem__text,
+  .problem[data-spotlight-ready] .problem__item:hover .problem__text {
+    color: var(--color-text);
+    translate: 0.5rem 0;
+  }
+
+  @media (min-width: 64rem) {
+    .problem__item {
+      padding-block: 1.375rem;
+      font-size: var(--text-xl);
+    }
+  }
+
+  /* Sin columnas lado a lado el contador no aporta: se oculta. */
+  @media (max-width: 63.9375rem) {
+    .problem__meter {
+      display: none;
+    }
   }
 </style>

@@ -185,6 +185,66 @@ plantilla de pull request, configuración de VS Code, README y documento de arqu
 
 ---
 
+## Anexo Sprint 1 — Motion design y microinteracciones
+
+**Objetivo.** Que el sitio se sienta diseñado en cada movimiento sin perder rendimiento,
+accesibilidad ni la garantía de que el contenido se ve aunque falle JavaScript.
+
+**Decisión técnica.** El anexo prefería Framer Motion y GSAP. No se usaron: Framer
+Motion es para React (el sitio es Astro sin React) y GSAP con ScrollTrigger supera por
+sí solo el presupuesto de 20 KB de JavaScript que vigila `quality.spec.ts`. Todo se hizo
+con las otras dos vías que el anexo admite: CSS (keyframes y transiciones) e
+`IntersectionObserver`, en un script propio de unos 3 KB (`src/scripts/motion.ts`).
+
+**Entregables.**
+
+- `src/styles/motion.css`: escala única de duraciones y curvas (tokens), revelado al
+  entrar en pantalla (`data-reveal`, con variantes `mask` y `media` y escalonado por
+  `--i`), entrada al cargar (`data-intro`, titulares por líneas), subrayado animado.
+- Hero: secuencia de entrada (badge, titular por líneas, texto, botones, nota), escalera
+  Build/Automate/Scale que entra, flota y se inclina con el cursor, halos de luz animados.
+- Navegación: barra fija que gana fondo translúcido al desplazarse, subrayado animado,
+  menú móvil que abre y cierra con transición y enlaces escalonados.
+- Tarjetas: elevación, borde iluminado que sigue al cursor e iconos con microanimación.
+- Nueva sección `Journey` en la portada: Build → Automate → Scale ligada al scroll con
+  una línea que avanza; nunca bloquea el desplazamiento.
+- Sección «El problema» como recorrido: el titular queda fijo en escritorio, los diez
+  problemas entran desde la derecha y se iluminan uno a uno al desplazarse, con un
+  contador y una barra de avance; al llegar al último, «Scalora conecta el negocio con
+  la tecnología» se enciende como respuesta. Sin JavaScript es una lista normal.
+- Diferenciadores con frases enmascaradas y divisorias que se dibujan; portafolio con
+  reveal de imagen y zoom contenido; CTA con titular enmascarado, luz ambiental, botón
+  magnético y fundido hacia el pie.
+
+**Garantías.**
+
+- Solo se animan `opacity`, `translate`, `scale`, `rotate`, `transform` y `clip-path`.
+- Sin JavaScript nada se oculta; si el script falla, un respaldo en CSS muestra todo a los
+  2,5 s; con movimiento reducido todo aparece al instante y sin bucles.
+- Parallax, botones magnéticos y brillo de tarjetas solo con puntero fino (no táctil).
+
+**Criterios de aceptación.**
+
+- [x] Animaciones coherentes en todas las secciones principales, con una sola escala de
+      tiempos.
+- [x] Sin saltos visuales: nada de lo animado cambia el layout.
+- [x] El contenido no desaparece si JavaScript falla (probado).
+- [x] Se respeta `prefers-reduced-motion` (probado).
+- [x] Funciona en móvil, sin errores de consola y dentro del presupuesto de JavaScript.
+
+**Validación.** `motion.spec.ts` cubre sin JavaScript, script fallido, movimiento
+reducido, revelado al desplazarse, barra al desplazarse y la secuencia ligada al scroll.
+Unitarias de los cálculos en `tests/unit/motion.test.ts`. Resultado: 53 de 53 unitarias y
+89 de 89 pruebas de navegador ejecutadas (7 omitidas por no aplicar a ese tamaño).
+Las pruebas de accesibilidad (axe) corren con movimiento reducido para medir el contraste
+en el estado final y no a mitad de una animación.
+
+**Hallazgos.** La barra fija hacía que en móvil «Hablemos» y el botón de menú pasaran a
+una segunda fila (ya ocurría antes, pero ahora ocupaba pantalla siempre); se redujo el
+espacio entre elementos para que quepan en una.
+
+---
+
 ## Pendientes fuera del alcance de estos sprints
 
 Dependen de información o accesos que aún no existen:

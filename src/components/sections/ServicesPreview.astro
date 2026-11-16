@@ -18,8 +18,8 @@ import { withBase } from '@/lib/url';
   />
 
   <Grid min="15rem" gap="md" as="ul">
-    {services.map((service) => (
-      <Card as="li" class="service-preview">
+    {services.map((service, index) => (
+      <Card as="li" class="service-preview" data-reveal style={`--i: ${index}`}>
         <span class="service-preview__icon">
           <Icon name={service.icon} />
         </span>
@@ -29,7 +29,7 @@ import { withBase } from '@/lib/url';
     ))}
   </Grid>
 
-  <div>
+  <div data-reveal>
     <Button href={withBase(homeServices.link.href)} variant="secondary">
       {homeServices.link.label}
       <span aria-hidden="true">→</span>
@@ -43,6 +43,10 @@ import { withBase } from '@/lib/url';
   }
 
   .service-preview__icon {
+    transition:
+      rotate var(--duration-slow) var(--ease-out),
+      scale var(--duration-slow) var(--ease-out),
+      background-color var(--duration-slow) var(--ease-out);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,6 +55,12 @@ import { withBase } from '@/lib/url';
     border: 1px solid var(--color-border-muted);
     border-radius: 0.75rem;
     color: var(--color-accent);
+  }
+
+  .service-preview:hover .service-preview__icon {
+    rotate: -8deg;
+    scale: 1.08;
+    background: var(--color-accent-haze);
   }
 
   .service-preview__title {

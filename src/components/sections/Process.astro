@@ -16,8 +16,8 @@ import { processSection, processSteps } from '@/content/process';
   />
 
   <Grid min="20rem" as="ol">
-    {processSteps.map((step) => (
-      <Card as="li" class="step">
+    {processSteps.map((step, index) => (
+      <Card as="li" class="step" data-reveal style={`--i: ${index}`}>
         <span class="step__number" aria-hidden="true">
           {step.number}
         </span>
@@ -27,7 +27,9 @@ import { processSection, processSteps } from '@/content/process';
     ))}
   </Grid>
 
-  <Statement lead={processSection.closing.lead} highlight={processSection.closing.highlight} />
+  <div data-reveal>
+    <Statement lead={processSection.closing.lead} highlight={processSection.closing.highlight} />
+  </div>
 </Section>
 
 <style>

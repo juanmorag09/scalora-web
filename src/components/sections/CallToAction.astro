@@ -5,14 +5,16 @@ import { callToAction } from '@/content/pages';
 import { withBase } from '@/lib/url';
 ---
 
-<Section id="siguiente-paso" tone="alt" labelledby="siguiente-paso-title">
+<Section id="siguiente-paso" tone="alt" labelledby="siguiente-paso-title" class="cta-section">
   <div class="cta">
-    <h2 id="siguiente-paso-title" class="cta__title">
+    <h2 id="siguiente-paso-title" class="cta__title" data-reveal="mask">
       {callToAction.title}
     </h2>
-    <p class="cta__lead">{callToAction.lead}</p>
-    <div class="cta__actions">
-      <Button href={withBase(callToAction.primary.href)}>
+    <p class="cta__lead" data-reveal style="--i: 2">
+      {callToAction.lead}
+    </p>
+    <div class="cta__actions" data-reveal style="--i: 3">
+      <Button href={withBase(callToAction.primary.href)} magnetic>
         {callToAction.primary.label}
         <span aria-hidden="true">→</span>
       </Button>
@@ -24,7 +26,43 @@ import { withBase } from '@/lib/url';
 </Section>
 
 <style>
+  /* Fundido del cierre hacia el pie de página. */
+  :global(.cta-section) {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+  }
+
+  :global(.cta-section)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    height: 45%;
+    background: linear-gradient(to bottom, transparent, var(--color-bg));
+    pointer-events: none;
+  }
+
+  /* Iluminación ambiental detrás del titular. */
+  .cta::before {
+    content: '';
+    position: absolute;
+    top: -35%;
+    left: -12%;
+    z-index: -1;
+    width: min(42rem, 90vw);
+    aspect-ratio: 1.6;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--color-accent-haze), transparent);
+    filter: blur(40px);
+    pointer-events: none;
+    animation: motion-drift calc(var(--duration-ambient) * 1.2) var(--ease-in-out) infinite;
+  }
+
   .cta {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

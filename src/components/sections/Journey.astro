@@ -1,0 +1,226 @@
+---
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { journeySection, journeyStages } from '@/content/journey';
+---
+
+{/*
+  Narrativa Build → Automate → Scale ligada al scroll. Sin JavaScript (o con movimiento
+  reducido) las tres etapas se ven activas y la línea completa; el script solo añade
+  el recorrido progresivo. Nunca bloquea el desplazamiento.
+*/}
+<Section id="build-automate-scale" labelledby="journey-title">
+  <SectionHeader
+    eyebrow={journeySection.eyebrow}
+    title={journeySection.title}
+    lead={journeySection.lead}
+    headingId="journey-title"
+  />
+
+  <div class="journey" data-journey>
+    <div class="journey__track" aria-hidden="true">
+      <span class="journey__fill"></span>
+    </div>
+    <ol class="journey__stages" role="list">
+      {journeyStages.map((stage) => (
+        <li class="stage" data-journey-stage data-active>
+          <span class="stage__node" aria-hidden="true"></span>
+          <p class="stage__label">
+            <span class="stage__step">{stage.step}</span>
+            {stage.title}
+          </p>
+          <h3 class="stage__heading">{stage.heading}</h3>
+          <p class="stage__description">{stage.description}</p>
+          <ul class="stage__items" role="list">
+            {stage.items.map((item) => (
+              <li class="stage__item">{item}</li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</Section>
+
+<style>
+  .journey {
+    --progress: 1;
+    --gap: var(--space-8);
+    --node: 1rem;
+
+    position: relative;
+  }
+
+  /* ---- Línea de conexión ---- */
+  .journey__track {
+    position: absolute;
+    top: calc(var(--node) / 2 - 1px);
+    left: calc(var(--node) / 2);
+    width: calc((100% - 2 * var(--gap)) * 2 / 3 + 2 * var(--gap));
+    height: 2px;
+    background: var(--color-border-muted);
+    border-radius: 2px;
+  }
+
+  .journey__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-accent);
+    border-radius: inherit;
+    box-shadow: 0 0 1rem var(--color-accent-glow);
+    scale: var(--progress) 1;
+    transform-origin: left center;
+    transition: scale 240ms linear;
+  }
+
+  .journey__stages {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    margin: 0;
+  }
+
+  /* ---- Etapa ---- */
+  .stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .stage__node {
+    position: relative;
+    width: var(--node);
+    height: var(--node);
+    margin-bottom: var(--space-4);
+    border: 2px solid var(--color-border-strong);
+    border-radius: 50%;
+    background: var(--color-bg);
+    transition:
+      background-color var(--duration-slow) var(--ease-out),
+      border-color var(--duration-slow) var(--ease-out);
+  }
+
+  /* Pulso de luz cuando la etapa se activa. */
+  .stage__node::after {
+    content: '';
+    position: absolute;
+    inset: -0.5rem;
+    border-radius: 50%;
+    background: var(--color-accent-glow);
+    opacity: 0;
+    scale: 0.4;
+  }
+
+  .stage[data-active] .stage__node {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .stage[data-active] .stage__node::after {
+    animation: node-pulse 900ms var(--ease-out);
+  }
+
+  @keyframes node-pulse {
+    from {
+      opacity: 0.9;
+      scale: 0.4;
+    }
+
+    to {
+      opacity: 0;
+      scale: 1.6;
+    }
+  }
+
+  .stage__label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-3xl);
+    line-height: 1;
+  }
+
+  .stage__step {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  .stage[data-active] .stage__label {
+    color: var(--color-accent);
+  }
+
+  .stage__heading {
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+  }
+
+  .stage__description {
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+
+  .stage__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .stage__item {
+    padding: 0.3125rem 0.625rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--color-text-muted);
+  }
+
+  /* El contenido de cada etapa aparece cuando el recorrido llega a ella. */
+  .stage > :not(.stage__node) {
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      translate var(--duration-slow) var(--ease-out);
+  }
+
+  .journey[data-journey-ready] .stage:not([data-active]) > :not(.stage__node) {
+    opacity: 0.35;
+    translate: 0 0.75rem;
+  }
+
+  /* ---- Móvil: recorrido vertical ---- */
+  @media (max-width: 47.9375rem) {
+    .journey__track {
+      top: calc(var(--node) / 2);
+      bottom: 0;
+      left: calc(var(--node) / 2 - 1px);
+      width: 2px;
+      height: auto;
+    }
+
+    .journey__fill {
+      scale: 1 var(--progress);
+      transform-origin: center top;
+    }
+
+    .journey__stages {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-12);
+    }
+
+    .stage {
+      padding-left: calc(var(--node) + var(--space-5));
+    }
+
+    .stage__node {
+      position: absolute;
+      top: 0.4rem;
+      left: 0;
+      margin: 0;
+    }
+  }
+</style>

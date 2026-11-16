@@ -8,14 +8,15 @@ interface Props {
   width?: 'default' | 'narrow';
   /** id del encabezado que nombra la sección para lectores de pantalla. */
   labelledby?: string;
+  class?: string | undefined;
 }
 
-const { id, tone = 'default', width = 'default', labelledby } = Astro.props;
+const { id, tone = 'default', width = 'default', labelledby, class: className } = Astro.props;
 ---
 
 <section
   id={id}
-  class:list={['section', tone === 'alt' && 'section--alt']}
+  class:list={['section', tone === 'alt' && 'section--alt', className]}
   aria-labelledby={labelledby}
 >
   <Container width={width}>

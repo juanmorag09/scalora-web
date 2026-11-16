@@ -14,8 +14,8 @@ import { aboutSection, principles } from '@/content/about';
   />
 
   <Grid min="20rem" as="ul">
-    {principles.map((principle) => (
-      <li class="principle">
+    {principles.map((principle, index) => (
+      <li class="principle" data-reveal style={`--i: ${index}`}>
         <h3 class="principle__label">{principle.label}</h3>
         <p class="principle__statement">{principle.statement}</p>
         <p class="principle__detail">{principle.detail}</p>

@@ -58,3 +58,11 @@ export interface Principle {
   statement: string;
   detail: string;
 }
+
+export interface JourneyStage {
+  step: string;
+  title: string;
+  heading: string;
+  description: string;
+  items: readonly string[];
+}

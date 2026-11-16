@@ -85,7 +85,21 @@
   --gutter: 1.5rem;
   --tap-target: 2.75rem;
 
-  /* Movimiento */
+  /* Movimiento: una sola escala de duraciones y curvas para todo el sitio. */
   --duration-fast: 150ms;
+  --duration-base: 260ms;
+  --duration-slow: 520ms;
+  --duration-reveal: 760ms;
+  --duration-ambient: 9s;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --stagger: 70ms;
+  --reveal-distance: 1.5rem;
+
+  /* Altura de la barra fija; las anclas compensan con ella al desplazarse. */
+  --header-height: 4.5rem;
+
+  /* Brillo de marca para glows y bordes iluminados (acento con transparencia). */
+  --color-accent-glow: rgb(198 244 50 / 0.45);
+  --color-accent-haze: rgb(198 244 50 / 0.12);
 }

@@ -1,0 +1,194 @@
+/*
+ * Sistema de movimiento de Scalora.
+ *
+ * Jerarquía: el hero y los titulares clave usan máscaras; el resto del contenido
+ * aparece con un fade corto hacia arriba; los elementos ambientales flotan despacio.
+ * Solo se animan `opacity`, `translate`, `scale`, `rotate` y `clip-path`, que no
+ * recalculan el layout.
+ *
+ * Seguridad: el contenido solo se oculta si hay JavaScript (`.js`, puesto en el <head>).
+ * Si el script de movimiento no llega a ejecutarse, una animación de respaldo lo muestra
+ * a los 2,5 s; cuando el script arranca añade `.motion-ready` y cancela ese respaldo.
+ */
+
+/* ---------- Animaciones base ---------- */
+
+@keyframes motion-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes motion-rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--reveal-distance);
+  }
+}
+
+/* Elemento de lista que entra desde la derecha. */
+@keyframes motion-slide {
+  from {
+    opacity: 0;
+    translate: 2rem 0;
+  }
+}
+
+/* Línea de texto que sube desde detrás de su máscara. */
+@keyframes motion-line {
+  from {
+    translate: 0 105%;
+  }
+}
+
+/* Titular que se descubre de abajo arriba. */
+@keyframes motion-mask {
+  from {
+    clip-path: inset(0 0 100% 0);
+    translate: 0 0.35em;
+  }
+
+  to {
+    clip-path: inset(0 0 -0.2em 0);
+  }
+}
+
+/* Imagen que se descubre y se asienta con un leve zoom. */
+@keyframes motion-media {
+  from {
+    clip-path: inset(100% 0 0 0);
+    scale: 1.06;
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+/* Flotación ambiental para elementos gráficos. */
+@keyframes motion-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -0.5rem;
+  }
+}
+
+/* Deriva lenta de los halos de luz. */
+@keyframes motion-drift {
+  0%,
+  100% {
+    translate: 0 0;
+    scale: 1;
+  }
+
+  33% {
+    translate: 6% -4%;
+    scale: 1.08;
+  }
+
+  66% {
+    translate: -5% 5%;
+    scale: 0.96;
+  }
+}
+
+/* ---------- Revelado al entrar en pantalla ---------- */
+
+/*
+ * Uso: `data-reveal` (fade hacia arriba), `data-reveal="mask"` (titulares),
+ * `data-reveal="media"` (imágenes). Para escalonar, `style="--i: n"`.
+ */
+@keyframes motion-fallback {
+  to {
+    opacity: 1;
+  }
+}
+
+.js [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+  animation: motion-fallback var(--duration-slow) var(--ease-out) 2.5s forwards;
+}
+
+.js.motion-ready [data-reveal]:not(.is-revealed) {
+  animation: none;
+}
+
+[data-reveal].is-revealed {
+  animation: motion-rise var(--duration-reveal) var(--ease-out) calc(var(--i, 0) * var(--stagger))
+    both;
+}
+
+[data-reveal='mask'].is-revealed {
+  animation-name: motion-mask;
+}
+
+[data-reveal='slide'].is-revealed {
+  animation-name: motion-slide;
+}
+
+[data-reveal='media'].is-revealed {
+  animation-name: motion-media;
+  animation-duration: 1s;
+}
+
+/* ---------- Entrada al cargar (hero y cabeceras de página, sin JavaScript) ---------- */
+
+/* Cada `[data-intro]` entra al cargar; `--i` fija el orden de la secuencia. */
+[data-intro] {
+  animation: motion-rise var(--duration-reveal) var(--ease-out) calc(180ms + var(--i, 0) * 110ms)
+    both;
+}
+
+/* Titular por líneas: el contenedor recorta y la línea sube. */
+.motion-line {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.motion-line__inner {
+  display: block;
+  animation: motion-line 900ms var(--ease-out) calc(120ms + var(--i, 0) * 120ms) both;
+}
+
+/* ---------- Subrayado animado para enlaces ---------- */
+
+.u-link {
+  position: relative;
+}
+
+.u-link::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 0.55rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  scale: 0 1;
+  transform-origin: right center;
+  transition: scale var(--duration-base) var(--ease-out);
+}
+
+.u-link:hover::after,
+.u-link:focus-visible::after,
+.u-link[aria-current='page']::after {
+  scale: 1 1;
+  transform-origin: left center;
+}
+
+/* ---------- Movimiento reducido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal],
+  .js [data-reveal]:not(.is-revealed) {
+    opacity: 1;
+    animation: none;
+  }
+}

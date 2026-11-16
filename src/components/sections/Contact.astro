@@ -14,11 +14,15 @@ const { fields } = contactForm;
 <Section id="contacto" tone="alt" labelledby="contacto-title">
   <Split>
     <Fragment slot="aside">
-      <Eyebrow>{contactSection.eyebrow}</Eyebrow>
-      <h2 id="contacto-title" class="contact__title">
+      <div data-reveal>
+        <Eyebrow>{contactSection.eyebrow}</Eyebrow>
+      </div>
+      <h2 id="contacto-title" class="contact__title" data-reveal="mask">
         {contactSection.title}
       </h2>
-      <p class="contact__lead">{contactSection.lead}</p>
+      <p class="contact__lead" data-reveal style="--i: 1">
+        {contactSection.lead}
+      </p>
       {PUBLIC_CONTACT_EMAIL && (
         <p class="contact__email">
           {contactSection.emailLead}{' '}
@@ -30,6 +34,8 @@ const { fields } = contactForm;
     </Fragment>
 
     <form
+      data-reveal
+      style="--i: 2"
       class="contact-form"
       method="post"
       action={PUBLIC_CONTACT_ENDPOINT}

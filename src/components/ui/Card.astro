@@ -3,6 +3,8 @@ interface Props {
   as?: 'article' | 'div' | 'li';
   padding?: 'none' | 'md' | 'lg';
   class?: string | undefined;
+  [key: `data-${string}`]: unknown;
+  style?: string;
 }
 
 const { as: Tag = 'article', padding = 'md', class: className, ...rest } = Astro.props;
@@ -14,11 +16,54 @@ const { as: Tag = 'article', padding = 'md', class: className, ...rest } = Astro
 
 <style>
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      border-color var(--duration-slow) var(--ease-out),
+      background-color var(--duration-slow) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+
+  /* Borde iluminado: un anillo de luz que sigue al puntero (--gx, --gy). */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    padding: 1px;
+    border-radius: inherit;
+    background: radial-gradient(
+      18rem circle at var(--gx, 50%) var(--gy, 0%),
+      var(--color-accent-glow),
+      transparent 70%
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover {
+      transform: translateY(-0.25rem);
+      background: var(--color-surface-raised);
+      box-shadow: 0 1.5rem 3rem -1.5rem rgb(0 0 0 / 0.6);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+  }
+
+  /* Con teclado, una tarjeta que contiene el foco también se destaca. */
+  .card:focus-within {
+    border-color: var(--color-border-strong);
   }
 
   .card--pad-md {
@@ -27,9 +72,5 @@ const { as: Tag = 'article', padding = 'md', class: className, ...rest } = Astro
 
   .card--pad-lg {
     padding: 2.125rem;
-  }
-
-  .card--pad-none {
-    overflow: hidden;
   }
 </style>

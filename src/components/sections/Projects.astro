@@ -16,9 +16,9 @@ import { withBase } from '@/lib/url';
   />
 
   <Grid min="20rem" as="ul">
-    {projects.map((project) => (
-      <Card as="li" padding="none" class="project">
-        <div class="project__media">
+    {projects.map((project, index) => (
+      <Card as="li" padding="none" class="project" data-reveal style={`--i: ${index}`}>
+        <div class="project__media" data-reveal="media" style={`--i: ${index + 2}`}>
           {project.image ? (
             <img
               class="project__image"
@@ -63,10 +63,23 @@ import { withBase } from '@/lib/url';
     overflow: hidden;
   }
 
+  .project__image,
+  .project__image-placeholder {
+    transition: scale 900ms var(--ease-out);
+  }
+
   .project__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  /* Zoom contenido de la imagen al pasar el cursor o al enfocar el proyecto. */
+  .project:hover .project__image,
+  .project:hover .project__image-placeholder,
+  .project:focus-within .project__image,
+  .project:focus-within .project__image-placeholder {
+    scale: 1.04;
   }
 
   .project__image-placeholder {
@@ -134,7 +147,17 @@ import { withBase } from '@/lib/url';
     color: var(--color-text);
   }
 
-  .project__link:hover {
+  .project__link:hover,
+  .project__link:focus-visible {
     color: var(--color-accent);
+  }
+
+  .project__link > span[aria-hidden='true'] {
+    transition: translate var(--duration-base) var(--ease-out);
+  }
+
+  .project__link:hover > span[aria-hidden='true'],
+  .project__link:focus-visible > span[aria-hidden='true'] {
+    translate: 0.25rem 0;
   }
 </style>

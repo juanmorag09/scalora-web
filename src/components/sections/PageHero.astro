@@ -13,16 +13,48 @@ const { page } = Astro.props;
 <section class="page-hero" aria-labelledby="page-title">
   <Container>
     <div class="page-hero__inner">
-      <Eyebrow>{page.eyebrow}</Eyebrow>
+      <div data-intro style="--i: 0">
+        <Eyebrow>{page.eyebrow}</Eyebrow>
+      </div>
       <h1 id="page-title" class="page-hero__title">
-        {page.heading}
+        <span class="motion-line">
+          <span class="motion-line__inner" style="--i: 1">
+            {page.heading}
+          </span>
+        </span>
       </h1>
-      <p class="page-hero__lead">{page.lead}</p>
+      <p class="page-hero__lead" data-intro style="--i: 2">
+        {page.lead}
+      </p>
     </div>
   </Container>
 </section>
 
 <style>
+  .page-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+  }
+
+  /* Halo de marca, más discreto que el del hero de la portada. */
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    z-index: -1;
+    width: min(34rem, 80vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-accent-haze), transparent 65%);
+    filter: blur(70px);
+    pointer-events: none;
+    animation:
+      motion-fade 1.6s var(--ease-out) both,
+      motion-drift var(--duration-ambient) var(--ease-in-out) infinite;
+  }
+
   .page-hero__inner {
     display: flex;
     flex-direction: column;

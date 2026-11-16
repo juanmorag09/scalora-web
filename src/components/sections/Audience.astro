@@ -14,8 +14,8 @@ import { audiences, audienceSection } from '@/content/audiences';
   />
 
   <Grid min="15rem" gap="md" as="ul">
-    {audiences.map((audience) => (
-      <Card as="li" class="audience">
+    {audiences.map((audience, index) => (
+      <Card as="li" class="audience" data-reveal style={`--i: ${index}`}>
         <h3 class="audience__title">{audience.title}</h3>
         <p class="audience__description">{audience.description}</p>
         <div class="audience__needs">

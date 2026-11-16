@@ -15,7 +15,7 @@ const links = visibleLinks(primaryNav, hiddenPaths).map((link) => ({
 const current = Astro.url.pathname;
 ---
 
-<header class="site-header">
+<header class="site-header" data-header>
   <Container>
     <div class="site-header__inner">
       <a class="site-header__brand" href={withBase('/')} aria-label={`${site.name}, ir al inicio`}>
@@ -27,7 +27,7 @@ const current = Astro.url.pathname;
           {links.map((link) => (
             <li>
               <a
-                class="site-nav__link"
+                class="site-nav__link u-link"
                 href={link.href}
                 aria-current={isCurrentPage(current, link.href) ? 'page' : undefined}
               >
@@ -39,7 +39,7 @@ const current = Astro.url.pathname;
       </nav>
 
       <div class="site-header__actions">
-        <Button href={withBase(contactLink.href)} variant="secondary" size="md">
+        <Button href={withBase(contactLink.href)} variant="secondary" size="md" magnetic>
           {contactLink.label}
         </Button>
         <button
@@ -72,8 +72,36 @@ const current = Astro.url.pathname;
 </script>
 
 <style>
+  /* Barra fija: transparente arriba; al desplazarse aparece un fondo translúcido. */
   .site-header {
-    border-bottom: 1px solid var(--color-border-subtle);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-slow) var(--ease-out);
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(11 13 18 / 0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .site-header[data-scrolled='true'] {
+    border-bottom-color: var(--color-border-subtle);
+  }
+
+  .site-header[data-scrolled='true']::before {
+    opacity: 1;
+  }
+
+  .site-header__brand {
+    animation: motion-fade 900ms var(--ease-out) both;
   }
 
   .site-header__inner {
@@ -112,19 +140,10 @@ const current = Astro.url.pathname;
     padding-inline: 2px;
     font-size: var(--text-base-sm);
     font-weight: 500;
-    color: var(--color-text-muted);
   }
 
-  .site-nav__link:hover,
   .site-nav__link[aria-current='page'] {
     color: var(--color-text);
-  }
-
-  .site-nav__link[aria-current='page'] {
-    text-decoration: underline;
-    text-decoration-color: var(--color-accent);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.5em;
   }
 
   .nav-toggle {
@@ -146,12 +165,27 @@ const current = Astro.url.pathname;
     display: none;
   }
 
-  .nav-toggle[aria-expanded='true'] .nav-toggle__icon--close {
+  .nav-toggle[aria-expanded='true'] .nav-toggle__icon--close,
+  .nav-toggle[aria-expanded='false'] .nav-toggle__icon--open {
     display: block;
+    animation: toggle-icon var(--duration-base) var(--ease-out);
+  }
+
+  @keyframes toggle-icon {
+    from {
+      opacity: 0;
+      rotate: -90deg;
+      scale: 0.6;
+    }
   }
 
   /* Móvil: el menú pasa a un panel desplegable debajo de la barra. */
   @media (max-width: 47.9375rem) {
+    /* Marca, «Hablemos» y menú caben en una sola fila: la barra fija ocupa menos. */
+    .site-header__inner {
+      column-gap: var(--space-3);
+    }
+
     .nav-toggle {
       display: inline-flex;
     }
@@ -175,8 +209,55 @@ const current = Astro.url.pathname;
       font-size: var(--text-md);
     }
 
-    /* Solo se oculta si hay JavaScript para volver a abrirlo. */
+    /* Solo se oculta si hay JavaScript para volver a abrirlo. Abre y cierra con un
+       desplazamiento corto; `allow-discrete` deja animar también el cierre. */
+    :global(.js) .site-nav {
+      transition:
+        opacity var(--duration-base) var(--ease-out),
+        translate var(--duration-base) var(--ease-out),
+        display var(--duration-base) allow-discrete;
+    }
+
     :global(.js) .site-nav:not([data-open='true']) {
+      display: none;
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+
+    :global(.js) .site-nav[data-open='true'] {
+      @starting-style {
+        opacity: 0;
+        translate: 0 -0.5rem;
+      }
+    }
+
+    /* Los enlaces entran uno tras otro. */
+    .site-nav[data-open='true'] li {
+      transition:
+        opacity var(--duration-slow) var(--ease-out),
+        translate var(--duration-slow) var(--ease-out);
+      transition-delay: calc(var(--n, 0) * 50ms);
+
+      @starting-style {
+        opacity: 0;
+        translate: 0 -0.375rem;
+      }
+    }
+
+    .site-nav__list li:nth-child(2) {
+      --n: 1;
+    }
+
+    .site-nav__list li:nth-child(3) {
+      --n: 2;
+    }
+
+    .site-nav__list li:nth-child(4) {
+      --n: 3;
+    }
+
+    /* En el panel móvil el subrayado se sustituye por el color. */
+    .site-nav__link::after {
       display: none;
     }
   }

@@ -5,6 +5,7 @@ import { audiences } from '@/content/audiences';
 import { callToAction, homeServices, pages } from '@/content/pages';
 import { differentiators } from '@/content/differentiators';
 import { pillars } from '@/content/hero';
+import { journeyStages } from '@/content/journey';
 import { problems } from '@/content/problem';
 import { processSteps } from '@/content/process';
 import { projects } from '@/content/projects';
@@ -56,6 +57,7 @@ describe('metadatos del sitio', () => {
 describe('contenido', () => {
   it('conserva las cantidades definidas en el documento de marca', () => {
     expect(pillars).toHaveLength(3);
+    expect(journeyStages.map((stage) => stage.title)).toEqual(['Build', 'Automate', 'Scale']);
     expect(problems).toHaveLength(10);
     expect(services).toHaveLength(4);
     expect(processSteps).toHaveLength(6);

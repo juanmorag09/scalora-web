@@ -2,6 +2,13 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { PAGES } from './pages';
 
+/*
+ * El análisis corre con movimiento reducido: así cada elemento está en su estado final
+ * y axe no mide el contraste a mitad de una animación. El estado final es el mismo con
+ * o sin movimiento (lo comprueba `motion.spec.ts`).
+ */
+test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 
 /** Devuelve las infracciones resumidas para que un fallo se lea de un vistazo. */

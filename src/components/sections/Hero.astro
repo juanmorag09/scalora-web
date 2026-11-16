@@ -5,35 +5,56 @@ import { hero, pillars } from '@/content/hero';
 import { withBase } from '@/lib/url';
 ---
 
-<section id="inicio" class="hero" aria-labelledby="hero-title">
+<section id="inicio" class="hero" aria-labelledby="hero-title" data-parallax>
+  {/* Halos de luz ambientales: decorativos, se mueven despacio y con el cursor. */}
+  <div class="hero__glow" aria-hidden="true">
+    <span class="hero__glow-blob hero__glow-blob--a"></span>
+    <span class="hero__glow-blob hero__glow-blob--b"></span>
+  </div>
   <Container>
     <div class="hero__inner">
       <div class="hero__copy">
-        <p class="hero__badge">
+        <p class="hero__badge" data-intro style="--i: 0">
           <span class="hero__badge-dot" aria-hidden="true"></span>
           {hero.badge}
         </p>
         <h1 id="hero-title" class="hero__title">
-          {hero.title.lead} <span class="hero__title-highlight">{hero.title.highlight}</span>
+          <span class="motion-line">
+            <span class="motion-line__inner" style="--i: 1">
+              {hero.title.lead}
+            </span>
+          </span>{' '}
+          <span class="motion-line">
+            <span class="motion-line__inner hero__title-highlight" style="--i: 2">
+              {hero.title.highlight}
+            </span>
+          </span>
         </h1>
-        <p class="hero__lead">{hero.lead}</p>
+        <p class="hero__lead" data-intro style="--i: 3">
+          {hero.lead}
+        </p>
         <div class="hero__actions">
-          <Button href={withBase(hero.primaryAction.href)}>
+          <Button href={withBase(hero.primaryAction.href)} magnetic data-intro style="--i: 4">
             {hero.primaryAction.label}
             <span aria-hidden="true">→</span>
           </Button>
-          <Button href={withBase(hero.secondaryAction.href)} variant="secondary">
+          <Button
+            href={withBase(hero.secondaryAction.href)}
+            variant="secondary"
+            data-intro
+            style="--i: 5"
+          >
             {hero.secondaryAction.label}
           </Button>
         </div>
-        <p class="hero__note">
+        <p class="hero__note" data-intro style="--i: 6">
           {hero.note.lead} <span class="hero__note-highlight">{hero.note.highlight}</span>
         </p>
       </div>
 
       <ol class="pillars" role="list">
-        {pillars.map((pillar) => (
-          <li class="pillar">
+        {pillars.map((pillar, index) => (
+          <li class="pillar" style={`--i: ${index}`}>
             <span class="pillar__step">{pillar.step}</span>
             <span class="pillar__body">
               <span class="pillar__title">{pillar.title}</span>
@@ -47,6 +68,52 @@ import { withBase } from '@/lib/url';
 </section>
 
 <style>
+  .hero {
+    --px: 0;
+    --py: 0;
+
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+  }
+
+  /* ---- Iluminación ambiental ---- */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    translate: calc(var(--px) * -1.5rem) calc(var(--py) * -1rem);
+    transition: translate 1.2s var(--ease-out);
+  }
+
+  .hero__glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation:
+      motion-fade 1.6s var(--ease-out) both,
+      motion-drift var(--duration-ambient) var(--ease-in-out) infinite;
+  }
+
+  .hero__glow-blob--a {
+    top: 8%;
+    right: -8%;
+    width: min(38rem, 70vw);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, var(--color-accent-haze), transparent 65%);
+  }
+
+  .hero__glow-blob--b {
+    bottom: -20%;
+    right: 22%;
+    width: min(26rem, 55vw);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, rgb(92 124 255 / 0.1), transparent 65%);
+    animation-duration: 1.6s, calc(var(--duration-ambient) * 1.4);
+    animation-direction: normal, reverse;
+  }
+
   .hero__inner {
     display: flex;
     flex-wrap: wrap;
@@ -123,6 +190,19 @@ import { withBase } from '@/lib/url';
     align-items: flex-end;
     gap: var(--space-3);
     margin: 0;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    rotate: y calc(var(--px) * 8deg);
+    transition: rotate 900ms var(--ease-out);
+  }
+
+  /* Elemento principal: entra escalonado, flota y se inclina con el cursor. */
+  .pillar {
+    rotate: x calc(var(--py) * -6deg);
+    transition: rotate 900ms var(--ease-out);
+    animation:
+      motion-rise 900ms var(--ease-out) calc(450ms + var(--i) * 140ms) both,
+      motion-float 6s var(--ease-in-out) calc(1.6s + var(--i) * 0.7s) infinite;
   }
 
   .pillar {

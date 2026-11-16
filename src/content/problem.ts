@@ -3,6 +3,7 @@ export const problemSection = {
   title: 'Buenas ideas que no llegan a ser producto.',
   lead: 'Muchos negocios tienen buenas ideas, pero enfrentan dificultades para convertirlas en productos tecnológicos funcionales.',
   closing: 'Scalora conecta el negocio con la tecnología.',
+  counterLabel: 'problemas que vemos a diario',
 } as const;
 
 export const problems = [

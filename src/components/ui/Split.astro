@@ -3,9 +3,15 @@
  * Dos columnas que se apilan solas cuando no caben: una lateral (slot `aside`)
  * y una principal más ancha (slot por defecto).
  */
+interface Props {
+  /** En escritorio, la columna lateral se queda fija mientras la principal se desplaza. */
+  sticky?: boolean;
+}
+
+const { sticky = false } = Astro.props;
 ---
 
-<div class="split">
+<div class:list={['split', sticky && 'split--sticky']}>
   <div class="split__aside">
     <slot name="aside" />
   </div>
@@ -33,5 +39,12 @@
   .split__main {
     flex: 1.3 1 27.5rem;
     min-width: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .split--sticky .split__aside {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-8));
+    }
   }
 </style>
