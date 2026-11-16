@@ -33,7 +33,7 @@ async function mockEndpoint(page: Page, status: number): Promise<Request[]> {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#contacto');
+  await page.goto('/contacto/');
 });
 
 test('un envío vacío marca los campos, enfoca el primero y no envía nada', async ({ page }) => {

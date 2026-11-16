@@ -3,9 +3,10 @@ import Container from '@/components/ui/Container.astro';
 import Logo from '@/components/ui/Logo.astro';
 import { footerNav, site } from '@/config/site';
 import { visibleLinks } from '@/lib/navigation';
-import { hiddenAnchors } from '@/lib/sections';
+import { hiddenPaths } from '@/lib/sections';
+import { withBase } from '@/lib/url';
 
-const links = visibleLinks(footerNav, hiddenAnchors);
+const links = visibleLinks(footerNav, hiddenPaths);
 const year = new Date().getFullYear();
 ---
 
@@ -23,7 +24,7 @@ const year = new Date().getFullYear();
         <ul class="site-footer__list" role="list">
           {links.map((link) => (
             <li>
-              <a class="site-footer__link" href={link.href}>
+              <a class="site-footer__link" href={withBase(link.href)}>
                 {link.label}
               </a>
             </li>

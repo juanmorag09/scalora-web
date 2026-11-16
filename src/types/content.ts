@@ -2,11 +2,12 @@
 
 export type IconName = 'product' | 'automation' | 'data' | 'infrastructure' | 'menu' | 'close';
 
-export type SectionAnchor = `#${string}`;
+/** Ruta interna del sitio, sin la ruta base y con barra final (p. ej. `/servicios/`). */
+export type PagePath = `/${string}`;
 
 export interface NavLink {
   label: string;
-  href: SectionAnchor;
+  href: PagePath;
 }
 
 export interface Pillar {

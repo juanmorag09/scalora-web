@@ -15,15 +15,15 @@ export const site = {
 } as const;
 
 export const primaryNav = [
-  { label: 'Servicios', href: '#servicios' },
-  { label: 'Proceso', href: '#proceso' },
-  { label: 'Proyectos', href: '#proyectos' },
-  { label: 'Nosotros', href: '#nosotros' },
+  { label: 'Servicios', href: '/servicios/' },
+  { label: 'Proceso', href: '/proceso/' },
+  { label: 'Proyectos', href: '/proyectos/' },
+  { label: 'Nosotros', href: '/nosotros/' },
 ] as const satisfies readonly NavLink[];
 
-export const contactLink = { label: 'Hablemos', href: '#contacto' } as const satisfies NavLink;
+export const contactLink = { label: 'Hablemos', href: '/contacto/' } as const satisfies NavLink;
 
 export const footerNav = [
   ...primaryNav,
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Contacto', href: '/contacto/' },
 ] as const satisfies readonly NavLink[];

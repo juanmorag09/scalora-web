@@ -1,17 +1,39 @@
 import { expect, test } from '@playwright/test';
+import { PAGES } from './pages';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
-test('todos los enlaces internos apuntan a una sección existente', async ({ page }) => {
-  const broken = await page.evaluate(() =>
-    Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
-      .map((anchor) => anchor.getAttribute('href') ?? '')
-      .filter((href) => href.length < 2 || !document.getElementById(href.slice(1))),
-  );
+test('ningún enlace interno lleva a una página rota', async ({ page, request }) => {
+  const targets = new Set<string>();
+  for (const path of PAGES) {
+    await page.goto(path);
+    const hrefs = await page
+      .locator('a[href^="/"]')
+      .evaluateAll((anchors) => anchors.map((anchor) => anchor.getAttribute('href') ?? ''));
+    hrefs.forEach((href) => targets.add(href));
 
-  expect(broken).toEqual([]);
+    const brokenAnchors = await page.evaluate(() =>
+      Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
+        .map((anchor) => anchor.getAttribute('href') ?? '')
+        .filter((href) => href.length < 2 || !document.getElementById(href.slice(1))),
+    );
+    expect(brokenAnchors, path).toEqual([]);
+  }
+
+  for (const href of targets) {
+    expect((await request.get(href)).status(), href).toBe(200);
+  }
+});
+
+test('el enlace del menú de la página actual queda marcado', async ({ page }) => {
+  await page.goto('/servicios/');
+  // Por atributo y no por rol: en móvil el menú está cerrado y oculto al árbol accesible.
+  const current = page.locator('[data-nav] [aria-current="page"]');
+
+  await expect(current).toHaveCount(1);
+  await expect(current).toHaveAttribute('href', '/servicios/');
 });
 
 test('el enlace de salto es lo primero que recibe el foco', async ({ page }) => {
@@ -32,16 +54,16 @@ test.describe('escritorio', () => {
     await expect(page.locator('[data-nav-toggle]')).toBeHidden();
   });
 
-  test('un enlace del menú lleva a su sección', async ({ page }) => {
+  test('un enlace del menú lleva a su página', async ({ page }) => {
     await page
       .getByRole('navigation', { name: 'Principal' })
       .getByRole('link', { name: 'Proceso' })
       .click();
 
-    await expect(page).toHaveURL(/#proceso$/);
+    await expect(page).toHaveURL(/\/proceso\/$/);
     await expect(
       page.getByRole('heading', { name: 'Seis etapas, de la idea al crecimiento.' }),
-    ).toBeInViewport();
+    ).toBeVisible();
   });
 });
 
@@ -79,7 +101,7 @@ test.describe('móvil', () => {
       .getByRole('link', { name: 'Servicios' })
       .click();
 
-    await expect(page).toHaveURL(/#servicios$/);
+    await expect(page).toHaveURL(/\/servicios\/$/);
     await expect(page.getByRole('navigation', { name: 'Principal' })).toBeHidden();
   });
 });

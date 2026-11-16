@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { PAGES } from './pages';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 
@@ -11,13 +12,15 @@ async function violations(page: Page): Promise<string[]> {
   );
 }
 
-test('la página principal no tiene infracciones de accesibilidad', async ({ page }) => {
-  await page.goto('/');
-  expect(await violations(page)).toEqual([]);
-});
+for (const path of PAGES) {
+  test(`${path} no tiene infracciones de accesibilidad`, async ({ page }) => {
+    await page.goto(path);
+    expect(await violations(page)).toEqual([]);
+  });
+}
 
 test('el formulario con errores visibles sigue siendo accesible', async ({ page }) => {
-  await page.goto('/#contacto');
+  await page.goto('/contacto/');
   await page.getByRole('button', { name: 'Enviar mensaje' }).click();
   await expect(page.getByRole('status')).toHaveText('Revisa los campos marcados.');
 
@@ -41,7 +44,7 @@ test('la página 404 no tiene infracciones de accesibilidad', async ({ page }) =
 test('todo objetivo táctil mide al menos 44 px', async ({ page, isMobile }) => {
   test.skip(!isMobile, 'Se mide con viewport móvil');
 
-  await page.goto('/');
+  await page.goto('/contacto/');
   const small = await page.locator('a:visible, button:visible').evaluateAll((elements) =>
     elements
       .map((element) => ({

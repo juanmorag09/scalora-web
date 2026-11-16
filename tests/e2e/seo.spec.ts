@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { PAGES } from './pages';
 
 /** Las pruebas compilan el sitio con SITE_URL=https://scalora.test (ver playwright.config.ts). */
 const SITE = 'https://scalora.test';
@@ -52,6 +53,21 @@ test.describe('metadatos de la página principal', () => {
   });
 });
 
+test.describe('metadatos de las páginas interiores', () => {
+  for (const path of PAGES.filter((p) => p !== '/')) {
+    test(`${path} tiene título, canónica propia y un único h1`, async ({ page }) => {
+      await page.goto(path);
+
+      await expect(page).toHaveTitle(/ — Scalora$/);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `${SITE}${path}`);
+      await expect(page.locator('h1')).toHaveCount(1);
+
+      const description = await page.locator('meta[name="description"]').getAttribute('content');
+      expect(description?.length).toBeGreaterThan(70);
+    });
+  }
+});
+
 test.describe('archivos para buscadores y redes', () => {
   test('robots.txt permite el rastreo y apunta al sitemap', async ({ request }) => {
     const response = await request.get('/robots.txt');
@@ -62,10 +78,12 @@ test.describe('archivos para buscadores y redes', () => {
     expect(body).toContain(`Sitemap: ${SITE}/sitemap-index.xml`);
   });
 
-  test('el sitemap lista la portada y no la página de error', async ({ request }) => {
+  test('el sitemap lista todas las páginas y no la de error', async ({ request }) => {
     const body = await (await request.get('/sitemap-0.xml')).text();
 
-    expect(body).toContain(`<loc>${SITE}/</loc>`);
+    for (const path of PAGES) {
+      expect(body).toContain(`<loc>${SITE}${path}</loc>`);
+    }
     expect(body).not.toContain('404');
   });
 

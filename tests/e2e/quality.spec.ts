@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { PAGES } from './pages';
 
 /** Presupuesto de JavaScript propio, en bytes sin comprimir. El sitio es casi todo HTML y CSS. */
 const JS_BUDGET_BYTES = 20_000;
@@ -6,12 +7,14 @@ const JS_BUDGET_BYTES = 20_000;
 test('no hay desbordamiento horizontal en ningún ancho habitual', async ({ page }) => {
   for (const width of [320, 375, 768, 1024, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
+    for (const path of PAGES) {
+      await page.goto(path);
 
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
-    expect(overflow, `ancho ${width}px`).toBeLessThanOrEqual(0);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow, `${path} a ${width}px`).toBeLessThanOrEqual(0);
+    }
   }
 });
 
@@ -26,7 +29,9 @@ test('carga sin errores de consola ni peticiones fallidas', async ({ page }) => 
     if (response.status() >= 400) problems.push(`${response.status()}: ${response.url()}`);
   });
 
-  await page.goto('/', { waitUntil: 'networkidle' });
+  for (const path of PAGES) {
+    await page.goto(path, { waitUntil: 'networkidle' });
+  }
 
   expect(problems).toEqual([]);
 });

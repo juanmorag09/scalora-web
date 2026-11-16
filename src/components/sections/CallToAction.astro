@@ -1,0 +1,51 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Section from '@/components/ui/Section.astro';
+import { callToAction } from '@/content/pages';
+import { withBase } from '@/lib/url';
+---
+
+<Section id="siguiente-paso" tone="alt" labelledby="siguiente-paso-title">
+  <div class="cta">
+    <h2 id="siguiente-paso-title" class="cta__title">
+      {callToAction.title}
+    </h2>
+    <p class="cta__lead">{callToAction.lead}</p>
+    <div class="cta__actions">
+      <Button href={withBase(callToAction.primary.href)}>
+        {callToAction.primary.label}
+        <span aria-hidden="true">→</span>
+      </Button>
+      <Button href={withBase(callToAction.secondary.href)} variant="secondary">
+        {callToAction.secondary.label}
+      </Button>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+    max-width: 47.5rem;
+  }
+
+  .cta__title {
+    font-size: var(--text-h2);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .cta__lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+  }
+</style>

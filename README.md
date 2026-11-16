@@ -48,7 +48,7 @@ npx playwright install chromium
 ```
 src/
 ├── config/site.ts        Identidad, metadatos y menús
-├── content/              Textos de cada sección (un archivo por sección)
+├── content/              Textos de cada sección; `pages.ts` con títulos y SEO de cada página
 ├── types/content.ts      Contratos del contenido
 ├── styles/
 │   ├── tokens.css        Tokens de diseño: única fuente de verdad visual
@@ -56,11 +56,11 @@ src/
 ├── components/
 │   ├── ui/               Piezas reutilizables (Button, Card, Grid, Section…)
 │   ├── layout/           Header, Footer, Seo
-│   └── sections/         Una sección de la página por archivo
-├── layouts/BaseLayout.astro
+│   └── sections/         Una sección por archivo (más PageHero y CallToAction)
+├── layouts/              BaseLayout (documento) y PageLayout (cabecera + pie)
 ├── lib/                  Lógica pura y probada (validación, rutas, navegación)
 ├── scripts/              JavaScript de cliente (menú móvil, formulario)
-└── pages/                index, 404 y robots.txt
+└── pages/                Portada, servicios, proceso, proyectos, nosotros, contacto, 404 y robots.txt
 tests/
 ├── unit/                 Vitest: lógica y consistencia del contenido
 └── e2e/                  Playwright: navegación, formulario, SEO, accesibilidad, calidad
@@ -79,12 +79,20 @@ avisa si el nuevo color pierde contraste.
 
 **Agregar un proyecto.** Añade una entrada en `src/content/projects.ts`. Con `image`
 (ruta dentro de `public/`) se muestra la captura; con `url`, el enlace. Si el arreglo
-queda vacío, la sección y su enlace del menú se ocultan solos.
+queda vacío, la página `/proyectos/` redirige a la portada y su enlace del menú se oculta.
+
+**Estructura de páginas.** La portada (`/`) solo resume lo esencial: hero, problema,
+resumen de servicios, diferenciadores y llamada a la acción. El detalle vive en
+`/servicios/` (servicios y para quién), `/proceso/` (enfoque y etapas), `/proyectos/`,
+`/nosotros/` y `/contacto/`.
 
 **Agregar una sección.** Crea el contenido en `src/content/`, el componente en
-`src/components/sections/` usando `Section` y `SectionHeader`, e impórtalo en
-`src/pages/index.astro`. Si va en el menú, añádela en `src/config/site.ts` y en la lista
-`SECTION_IDS` de `tests/unit/content.test.ts`.
+`src/components/sections/` usando `Section` y `SectionHeader`, e impórtalo en la página
+que corresponda dentro de `src/pages/`.
+
+**Agregar una página.** Añade su título, descripción y encabezado en `src/content/pages.ts`,
+crea `src/pages/<ruta>.astro` con `PageLayout` y `PageHero`, súmala al menú en
+`src/config/site.ts` y a la lista `PAGES` de `tests/e2e/pages.ts`.
 
 ## Variables de entorno
 

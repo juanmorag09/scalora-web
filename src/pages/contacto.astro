@@ -1,0 +1,13 @@
+---
+import Contact from '@/components/sections/Contact.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import { pages } from '@/content/pages';
+import PageLayout from '@/layouts/PageLayout.astro';
+
+const page = pages.contacto;
+---
+
+<PageLayout title={page.title} description={page.description}>
+  <PageHero page={page} />
+  <Contact />
+</PageLayout>

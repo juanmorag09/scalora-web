@@ -4,16 +4,21 @@ import Container from '@/components/ui/Container.astro';
 import Icon from '@/components/ui/Icon.astro';
 import Logo from '@/components/ui/Logo.astro';
 import { contactLink, primaryNav, site } from '@/config/site';
-import { visibleLinks } from '@/lib/navigation';
-import { hiddenAnchors } from '@/lib/sections';
+import { isCurrentPage, visibleLinks } from '@/lib/navigation';
+import { hiddenPaths } from '@/lib/sections';
+import { withBase } from '@/lib/url';
 
-const links = visibleLinks(primaryNav, hiddenAnchors);
+const links = visibleLinks(primaryNav, hiddenPaths).map((link) => ({
+  ...link,
+  href: withBase(link.href),
+}));
+const current = Astro.url.pathname;
 ---
 
 <header class="site-header">
   <Container>
     <div class="site-header__inner">
-      <a class="site-header__brand" href="#inicio" aria-label={`${site.name}, ir al inicio`}>
+      <a class="site-header__brand" href={withBase('/')} aria-label={`${site.name}, ir al inicio`}>
         <Logo />
       </a>
 
@@ -21,7 +26,11 @@ const links = visibleLinks(primaryNav, hiddenAnchors);
         <ul class="site-nav__list" role="list">
           {links.map((link) => (
             <li>
-              <a class="site-nav__link" href={link.href}>
+              <a
+                class="site-nav__link"
+                href={link.href}
+                aria-current={isCurrentPage(current, link.href) ? 'page' : undefined}
+              >
                 {link.label}
               </a>
             </li>
@@ -30,7 +39,7 @@ const links = visibleLinks(primaryNav, hiddenAnchors);
       </nav>
 
       <div class="site-header__actions">
-        <Button href={contactLink.href} variant="secondary" size="md">
+        <Button href={withBase(contactLink.href)} variant="secondary" size="md">
           {contactLink.label}
         </Button>
         <button
@@ -103,6 +112,19 @@ const links = visibleLinks(primaryNav, hiddenAnchors);
     padding-inline: 2px;
     font-size: var(--text-base-sm);
     font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .site-nav__link:hover,
+  .site-nav__link[aria-current='page'] {
+    color: var(--color-text);
+  }
+
+  .site-nav__link[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.5em;
   }
 
   .nav-toggle {

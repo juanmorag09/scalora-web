@@ -4,8 +4,8 @@ export const hero = {
   badge: 'Build. Automate. Scale.',
   title: { lead: 'Tu idea merece convertirse en', highlight: 'algo real.' },
   lead: 'En Scalora transformamos ideas y negocios en productos digitales modernos, automatizados y preparados para crecer. Desde el primer MVP hasta una plataforma capaz de atender miles de usuarios, construimos la tecnología que tu negocio necesita para avanzar.',
-  primaryAction: { label: 'Iniciar un proyecto', href: '#contacto' },
-  secondaryAction: { label: 'Ver cómo trabajamos', href: '#proceso' },
+  primaryAction: { label: 'Iniciar un proyecto', href: '/contacto/' },
+  secondaryAction: { label: 'Ver cómo trabajamos', href: '/proceso/' },
   note: {
     lead: 'No solo desarrollamos software.',
     highlight: 'Construimos negocios preparados para escalar.',

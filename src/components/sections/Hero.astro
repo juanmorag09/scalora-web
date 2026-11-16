@@ -2,6 +2,7 @@
 import Button from '@/components/ui/Button.astro';
 import Container from '@/components/ui/Container.astro';
 import { hero, pillars } from '@/content/hero';
+import { withBase } from '@/lib/url';
 ---
 
 <section id="inicio" class="hero" aria-labelledby="hero-title">
@@ -17,11 +18,11 @@ import { hero, pillars } from '@/content/hero';
         </h1>
         <p class="hero__lead">{hero.lead}</p>
         <div class="hero__actions">
-          <Button href={hero.primaryAction.href}>
+          <Button href={withBase(hero.primaryAction.href)}>
             {hero.primaryAction.label}
             <span aria-hidden="true">→</span>
           </Button>
-          <Button href={hero.secondaryAction.href} variant="secondary">
+          <Button href={withBase(hero.secondaryAction.href)} variant="secondary">
             {hero.secondaryAction.label}
           </Button>
         </div>

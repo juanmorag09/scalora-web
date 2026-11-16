@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { contactLink, footerNav, primaryNav, site } from '@/config/site';
 import { principles } from '@/content/about';
 import { audiences } from '@/content/audiences';
+import { callToAction, homeServices, pages } from '@/content/pages';
 import { differentiators } from '@/content/differentiators';
 import { pillars } from '@/content/hero';
 import { problems } from '@/content/problem';
@@ -9,26 +10,23 @@ import { processSteps } from '@/content/process';
 import { projects } from '@/content/projects';
 import { services } from '@/content/services';
 
-/** Anclas que la página realmente renderiza (ids de las secciones). */
-const SECTION_IDS = [
-  'inicio',
-  'problema',
-  'servicios',
-  'enfoque',
-  'proceso',
-  'para-quien',
-  'diferenciadores',
-  'proyectos',
-  'nosotros',
-  'contacto',
-];
+/** Rutas que existen como archivo en `src/pages`. */
+const PAGE_PATHS = ['/', ...Object.keys(pages).map((slug) => `/${slug}/`)];
 
 const unique = (values: readonly string[]): boolean => new Set(values).size === values.length;
 
 describe('navegación', () => {
-  it('cada enlace apunta a una sección que existe', () => {
-    for (const link of [...primaryNav, ...footerNav, contactLink]) {
-      expect(SECTION_IDS, link.label).toContain(link.href.slice(1));
+  it('cada enlace apunta a una página que existe', () => {
+    const links = [
+      ...primaryNav,
+      ...footerNav,
+      contactLink,
+      homeServices.link,
+      callToAction.primary,
+      callToAction.secondary,
+    ];
+    for (const link of links) {
+      expect(PAGE_PATHS, link.label).toContain(link.href);
     }
   });
 });
@@ -41,6 +39,17 @@ describe('metadatos del sitio', () => {
 
   it('el título no se trunca en buscadores', () => {
     expect(site.title.length).toBeLessThanOrEqual(60);
+  });
+
+  it('cada página interior tiene título y descripción propios y de buen tamaño', () => {
+    const all = Object.values(pages);
+    for (const page of all) {
+      expect(page.title.length, page.title).toBeLessThanOrEqual(60);
+      expect(page.description.length, page.title).toBeGreaterThanOrEqual(70);
+      expect(page.description.length, page.title).toBeLessThanOrEqual(200);
+    }
+    expect(unique(all.map((page) => page.title))).toBe(true);
+    expect(unique(all.map((page) => page.description))).toBe(true);
   });
 });
 

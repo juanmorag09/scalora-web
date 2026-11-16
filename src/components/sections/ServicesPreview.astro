@@ -1,0 +1,65 @@
+---
+import Button from '@/components/ui/Button.astro';
+import Card from '@/components/ui/Card.astro';
+import Grid from '@/components/ui/Grid.astro';
+import Icon from '@/components/ui/Icon.astro';
+import Section from '@/components/ui/Section.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { homeServices } from '@/content/pages';
+import { services } from '@/content/services';
+import { withBase } from '@/lib/url';
+---
+
+<Section id="servicios" labelledby="servicios-title">
+  <SectionHeader
+    eyebrow={homeServices.eyebrow}
+    title={homeServices.title}
+    headingId="servicios-title"
+  />
+
+  <Grid min="15rem" gap="md" as="ul">
+    {services.map((service) => (
+      <Card as="li" class="service-preview">
+        <span class="service-preview__icon">
+          <Icon name={service.icon} />
+        </span>
+        <h3 class="service-preview__title">{service.title}</h3>
+        <p class="service-preview__summary">{service.summary}</p>
+      </Card>
+    ))}
+  </Grid>
+
+  <div>
+    <Button href={withBase(homeServices.link.href)} variant="secondary">
+      {homeServices.link.label}
+      <span aria-hidden="true">→</span>
+    </Button>
+  </div>
+</Section>
+
+<style>
+  .service-preview {
+    gap: var(--space-4);
+  }
+
+  .service-preview__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.875rem;
+    height: 2.875rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: 0.75rem;
+    color: var(--color-accent);
+  }
+
+  .service-preview__title {
+    font-size: var(--text-xl);
+    line-height: 1.25;
+  }
+
+  .service-preview__summary {
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+</style>
