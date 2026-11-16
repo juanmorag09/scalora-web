@@ -11,3 +11,7 @@ coverage/
 .DS_Store
 *.log
 .vitest/
+
+# Reel de Instagram: el video se regenera con node marketing/reel/render.mjs
+marketing/reel/*.mp4
+marketing/reel/stills/
