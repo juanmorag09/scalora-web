@@ -15,7 +15,7 @@ permissions:
 jobs:
   quality:
     name: Formato, lint, tipos y pruebas unitarias
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
 
   e2e:
     name: Pruebas de navegador y accesibilidad
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
