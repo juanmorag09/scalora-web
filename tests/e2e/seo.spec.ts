@@ -37,6 +37,7 @@ test.describe('metadatos de la página principal', () => {
     expect(data['@type']).toBe('Organization');
     expect(data['name']).toBe('Scalora');
     expect(data['url']).toBe(`${SITE}/`);
+    expect(data['sameAs']).toContain('https://www.facebook.com/ScaloraGrup');
   });
 
   test('tiene un único h1 y los encabezados no saltan niveles', async ({ page }) => {

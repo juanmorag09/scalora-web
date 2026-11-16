@@ -1,5 +1,5 @@
 ---
-import { site } from '@/config/site';
+import { site, socialLinks } from '@/config/site';
 import { withBase } from '@/lib/url';
 
 interface Props {
@@ -23,6 +23,7 @@ const organization = {
   logo: new URL(withBase('favicon.svg'), Astro.site).href,
   slogan: site.tagline,
   description: site.description,
+  sameAs: socialLinks.map((social) => social.url),
 };
 ---
 

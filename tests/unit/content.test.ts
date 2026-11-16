@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contactLink, footerNav, primaryNav, site } from '@/config/site';
+import { contactLink, footerNav, primaryNav, site, socialLinks } from '@/config/site';
 import { principles } from '@/content/about';
 import { audiences } from '@/content/audiences';
 import { callToAction, homeServices, pages } from '@/content/pages';
@@ -29,6 +29,16 @@ describe('navegación', () => {
     for (const link of links) {
       expect(PAGE_PATHS, link.label).toContain(link.href);
     }
+  });
+});
+
+describe('redes sociales', () => {
+  it('cada perfil es una URL https propia y sin repetir', () => {
+    expect(socialLinks.length).toBeGreaterThan(0);
+    for (const social of socialLinks) {
+      expect(social.url, social.network).toMatch(/^https:\/\/[^/]+\/.+/);
+    }
+    expect(unique(socialLinks.map((social) => social.url))).toBe(true);
   });
 });
 

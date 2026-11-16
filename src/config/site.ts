@@ -1,4 +1,4 @@
-import type { NavLink } from '@/types/content';
+import type { NavLink, SocialLink } from '@/types/content';
 
 /** Datos globales del sitio: identidad, metadatos y navegación. */
 export const site = {
@@ -22,6 +22,11 @@ export const primaryNav = [
 ] as const satisfies readonly NavLink[];
 
 export const contactLink = { label: 'Hablemos', href: '/contacto/' } as const satisfies NavLink;
+
+/** Redes de Scalora: se muestran en el pie y se declaran a buscadores (`sameAs`). */
+export const socialLinks = [
+  { network: 'Facebook', url: 'https://www.facebook.com/ScaloraGrup', icon: 'facebook' },
+] as const satisfies readonly SocialLink[];
 
 export const footerNav = [
   ...primaryNav,

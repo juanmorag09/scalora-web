@@ -1,7 +1,8 @@
 ---
 import Container from '@/components/ui/Container.astro';
+import Icon from '@/components/ui/Icon.astro';
 import Logo from '@/components/ui/Logo.astro';
-import { footerNav, site } from '@/config/site';
+import { footerNav, site, socialLinks } from '@/config/site';
 import { visibleLinks } from '@/lib/navigation';
 import { hiddenPaths } from '@/lib/sections';
 import { withBase } from '@/lib/url';
@@ -19,6 +20,17 @@ const year = new Date().getFullYear();
         <p class="site-footer__legal">
           {site.slogan} © {year} {site.name}.
         </p>
+        <ul class="site-footer__social" role="list" aria-label="Redes sociales">
+          {socialLinks.map((social) => (
+            <li>
+              <a class="social-button" href={social.url} target="_blank" rel="noopener noreferrer">
+                <Icon name={social.icon} size={18} />
+                {social.network}
+                <span class="visually-hidden">(se abre en una pestaña nueva)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
       <nav aria-label="Pie de página">
         <ul class="site-footer__list" role="list">
@@ -65,6 +77,42 @@ const year = new Date().getFullYear();
   .site-footer__legal {
     font-size: var(--text-base-sm);
     color: var(--color-text-faint);
+  }
+
+  .site-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: var(--space-2) 0 0;
+  }
+
+  .social-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-target);
+    padding-inline: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-base-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    transition:
+      border-color var(--duration-base) var(--ease-out),
+      background-color var(--duration-base) var(--ease-out),
+      scale var(--duration-base) var(--ease-out);
+  }
+
+  .social-button :global(svg) {
+    color: var(--color-accent);
+  }
+
+  .social-button:hover,
+  .social-button:focus-visible {
+    border-color: var(--color-accent);
+    background: var(--color-accent-haze);
+    color: var(--color-text);
+    scale: 1.03;
   }
 
   .site-footer__list {

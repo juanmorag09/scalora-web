@@ -1,6 +1,7 @@
 /** Contratos del contenido. El marcado nunca define textos: los lee de `src/content`. */
 
-export type IconName = 'product' | 'automation' | 'data' | 'infrastructure' | 'menu' | 'close';
+export type IconName =
+  'product' | 'automation' | 'data' | 'infrastructure' | 'menu' | 'close' | 'facebook';
 
 /** Ruta interna del sitio, sin la ruta base y con barra final (p. ej. `/servicios/`). */
 export type PagePath = `/${string}`;
@@ -8,6 +9,13 @@ export type PagePath = `/${string}`;
 export interface NavLink {
   label: string;
   href: PagePath;
+}
+
+/** Perfil de Scalora en una red social (enlace externo). */
+export interface SocialLink {
+  network: string;
+  url: `https://${string}`;
+  icon: IconName;
 }
 
 export interface Pillar {

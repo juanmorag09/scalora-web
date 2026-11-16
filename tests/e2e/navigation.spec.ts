@@ -27,6 +27,16 @@ test('ningún enlace interno lleva a una página rota', async ({ page, request }
   }
 });
 
+test('el pie tiene el botón de Facebook y abre en una pestaña nueva', async ({ page }) => {
+  const facebook = page.getByRole('contentinfo').getByRole('link', { name: /Facebook/ });
+
+  await expect(facebook).toBeVisible();
+  await expect(facebook).toHaveAttribute('href', 'https://www.facebook.com/ScaloraGrup');
+  await expect(facebook).toHaveAttribute('target', '_blank');
+  await expect(facebook).toHaveAttribute('rel', /noopener/);
+  await expect(facebook).toHaveAccessibleName(/se abre en una pestaña nueva/);
+});
+
 test('el enlace del menú de la página actual queda marcado', async ({ page }) => {
   await page.goto('/servicios/');
   // Por atributo y no por rol: en móvil el menú está cerrado y oculto al árbol accesible.
