@@ -17,7 +17,7 @@ export const site = {
 export const primaryNav = [
   { label: 'Servicios', href: '/servicios/' },
   { label: 'Proceso', href: '/proceso/' },
-  { label: 'Proyectos', href: '/proyectos/' },
+  { label: 'Deployments', href: '/proyectos/' },
   { label: 'Nosotros', href: '/nosotros/' },
 ] as const satisfies readonly NavLink[];
 

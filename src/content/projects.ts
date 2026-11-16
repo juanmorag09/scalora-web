@@ -2,10 +2,10 @@ import type { Project } from '@/types/content';
 
 export const projectsSection = {
   eyebrow: 'Portafolio',
-  title: 'Proyectos',
+  title: 'Deployments',
   lead: 'Ideas convertidas en productos, y productos en negocios escalables.',
   imagePlaceholder: 'Captura pendiente',
-  linkLabel: 'Ver proyecto',
+  linkLabel: 'Ver deployment',
 } as const;
 
 /*

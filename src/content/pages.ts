@@ -33,10 +33,10 @@ export const pages = {
     lead: 'Un enfoque claro y un proceso por etapas para que cada decisión técnica responda a un objetivo de negocio.',
   },
   proyectos: {
-    title: withName('Proyectos'),
+    title: withName('Deployments'),
     description:
-      'Proyectos de Scalora: ideas convertidas en productos digitales y productos convertidos en negocios preparados para escalar.',
-    eyebrow: 'Proyectos',
+      'Deployments de Scalora: ideas convertidas en productos digitales y productos convertidos en negocios preparados para escalar.',
+    eyebrow: 'Deployments',
     heading: 'Lo que hemos construido.',
     lead: 'Ideas convertidas en productos, y productos en negocios escalables.',
   },
