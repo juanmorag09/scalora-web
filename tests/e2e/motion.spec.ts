@@ -15,6 +15,9 @@ async function hiddenReveals(page: Page): Promise<number> {
     );
 }
 
+const splash = (page: Page) => page.locator('[data-splash]');
+const headerLogo = (page: Page) => page.locator('.site-header__brand .logo');
+
 async function activeStages(page: Page): Promise<number> {
   return page.locator('[data-journey-stage][data-active]').count();
 }
@@ -55,6 +58,66 @@ test.describe('movimiento reducido', () => {
 
     await expect.poll(() => hiddenReveals(page)).toBe(0);
     expect(await activeStages(page)).toBe(3);
+  });
+
+  test('no se muestra la apertura de marca', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(splash(page)).toBeHidden();
+    await expect(headerLogo(page)).toBeVisible();
+  });
+});
+
+test.describe('apertura de marca', () => {
+  test('aparece al cargar y el logo termina en la cabecera', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(splash(page)).toBeVisible();
+    await expect(page.locator('[data-splash] .logo__word')).toHaveText('SCALORA');
+    await expect(splash(page)).toHaveCount(0, { timeout: 5000 });
+    await expect(headerLogo(page)).toBeVisible();
+    await expect(page.locator('html')).not.toHaveClass(/splash-active/);
+  });
+
+  test('aparece también en las páginas interiores', async ({ page }) => {
+    await page.goto('/servicios/');
+
+    await expect(splash(page)).toBeVisible();
+    await expect(splash(page)).toHaveCount(0, { timeout: 5000 });
+  });
+
+  test('una tecla la salta al instante', async ({ page }) => {
+    await page.goto('/');
+    await expect(splash(page)).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(splash(page)).toHaveCount(0, { timeout: 1000 });
+    await expect(headerLogo(page)).toBeVisible();
+  });
+
+  test('si el script falla, se retira sola y el logo vuelve a la cabecera', async ({ page }) => {
+    // El script de la apertura rompe al arrancar; queda solo el respaldo en CSS.
+    await page.addInitScript(() => {
+      Element.prototype.getAnimations = () => {
+        throw new Error('Fallo simulado de la apertura');
+      };
+    });
+    page.on('pageerror', () => undefined);
+    await page.goto('/');
+
+    await expect(splash(page)).toBeHidden({ timeout: 6000 });
+    await expect(headerLogo(page)).toBeVisible({ timeout: 6000 });
+  });
+});
+
+test.describe('sin JavaScript, la apertura', () => {
+  test.use({ javaScriptEnabled: false });
+
+  test('no aparece', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(splash(page)).toBeHidden();
+    await expect(headerLogo(page)).toBeVisible();
   });
 });
 

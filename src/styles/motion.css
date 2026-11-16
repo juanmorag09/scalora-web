@@ -11,6 +11,18 @@
  * a los 2,5 s; cuando el script arranca añade `.motion-ready` y cancela ese respaldo.
  */
 
+/*
+ * Con la apertura de marca activa (`.splash-offset`, ver Splash.astro) la entrada del
+ * hero y de las cabeceras espera a que el logo vuele a su sitio.
+ */
+:root {
+  --intro-offset: 0s;
+}
+
+.splash-offset {
+  --intro-offset: 1.9s;
+}
+
 /* ---------- Animaciones base ---------- */
 
 @keyframes motion-fade {
@@ -139,8 +151,8 @@
 
 /* Cada `[data-intro]` entra al cargar; `--i` fija el orden de la secuencia. */
 [data-intro] {
-  animation: motion-rise var(--duration-reveal) var(--ease-out) calc(180ms + var(--i, 0) * 110ms)
-    both;
+  animation: motion-rise var(--duration-reveal) var(--ease-out)
+    calc(var(--intro-offset) + 180ms + var(--i, 0) * 110ms) both;
 }
 
 /* Titular por líneas: el contenedor recorta y la línea sube. */
@@ -153,7 +165,8 @@
 
 .motion-line__inner {
   display: block;
-  animation: motion-line 900ms var(--ease-out) calc(120ms + var(--i, 0) * 120ms) both;
+  animation: motion-line 900ms var(--ease-out)
+    calc(var(--intro-offset) + 120ms + var(--i, 0) * 120ms) both;
 }
 
 /* ---------- Subrayado animado para enlaces ---------- */

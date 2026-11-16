@@ -7,6 +7,7 @@
  * - Secuencia Build → Automate → Scale ligada al scroll (`[data-journey]`).
  * - Listas que se recorren con el scroll, un elemento en foco a la vez (`[data-spotlight]`).
  * - Solo con puntero fino: parallax del hero, botones magnéticos y brillo de tarjetas.
+ * - Apertura de marca (`scripts/splash.ts`): el revelado espera a que termine.
  */
 import {
   activeStageCount,
@@ -15,6 +16,7 @@ import {
   pointerRatio,
   scrollProgress,
 } from '@/lib/motion';
+import { initSplash } from '@/scripts/splash';
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
 const FINE_POINTER = '(hover: hover) and (pointer: fine)';
@@ -24,7 +26,8 @@ export function initMotion(): void {
   const reduced = window.matchMedia(REDUCED_MOTION).matches;
   root.classList.add('motion-ready');
 
-  initReveal(reduced);
+  // Lo que está a la vista se revela cuando la apertura ya dejó ver la página.
+  void initSplash().then(() => initReveal(reduced));
   initScrollEffects(reduced);
 
   if (!reduced && window.matchMedia(FINE_POINTER).matches) {

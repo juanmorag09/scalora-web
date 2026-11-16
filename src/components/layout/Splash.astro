@@ -1,0 +1,157 @@
+---
+import Logo from '@/components/ui/Logo.astro';
+import { site } from '@/config/site';
+---
+
+{/*
+  Apertura de marca: suben las barras, aparece SCALORA y el lema, y el logo vuela hasta
+  su sitio en la cabecera (lo mueve `scripts/splash.ts`).
+
+  - Es el mismo componente <Logo /> de la cabecera, ampliado: al aterrizar coincide
+    píxel a píxel con el real y el cambio no se nota.
+  - Solo se activa con JavaScript y sin movimiento reducido (script de abajo, antes de
+    pintar la cabecera). Sin eso, nunca aparece.
+  - Si el script de movimiento fallara, una animación CSS la retira a los 3,4 s.
+  - Un clic, una tecla, la rueda o un toque la saltan.
+*/}
+<div class="splash" data-splash aria-hidden="true">
+  <script is:inline>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('splash-active', 'splash-offset');
+    }
+  </script>
+  <div class="splash__backdrop" data-splash-backdrop></div>
+  <div class="splash__logo" data-splash-logo>
+    <Logo />
+  </div>
+  <p class="splash__tagline">{site.tagline}</p>
+</div>
+
+<style>
+  .splash {
+    display: none;
+  }
+
+  :global(.splash-active) .splash {
+    --splash-scale: 3.4;
+
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: block;
+    cursor: pointer;
+    animation: splash-gone 0.4s ease 3.4s forwards;
+  }
+
+  /* Mientras dura la apertura, el logo real espera oculto en la cabecera. Si el script
+     no llegara a quitar `.splash-active`, reaparece solo a la vez que se va la apertura. */
+  :global(.splash-active .site-header__brand .logo) {
+    animation: splash-brand-wait 3.4s steps(1, end) both;
+  }
+
+  @keyframes splash-brand-wait {
+    from {
+      visibility: hidden;
+    }
+
+    to {
+      visibility: visible;
+    }
+  }
+
+  @keyframes splash-gone {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  .splash__backdrop {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 50%, var(--color-accent-haze), transparent 45%), var(--color-bg);
+  }
+
+  /* El logo se centra y se amplía; el script lo lleva luego a la cabecera. */
+  .splash__logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    transform: translate(0, 0) translate(-50%, -50%) scale(var(--splash-scale));
+  }
+
+  /* ---- Secuencia: barras, nombre y lema ---- */
+  .splash :global(.logo__bar) {
+    transform-origin: bottom;
+    animation: splash-bar 0.6s var(--ease-out) both;
+  }
+
+  .splash :global(.logo__bar--1) {
+    animation-delay: 0.1s;
+  }
+
+  .splash :global(.logo__bar--2) {
+    animation-delay: 0.2s;
+  }
+
+  .splash :global(.logo__bar--3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes splash-bar {
+    from {
+      scale: 1 0;
+    }
+  }
+
+  .splash :global(.logo__word) {
+    animation: splash-word 0.7s var(--ease-out) 0.45s both;
+  }
+
+  @keyframes splash-word {
+    from {
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+      opacity: 1;
+      clip-path: inset(0 -0.2em 0 0);
+    }
+  }
+
+  .splash__tagline {
+    position: absolute;
+    top: calc(50% + 3.25rem);
+    left: 0;
+    right: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    letter-spacing: 0.06em;
+    text-align: center;
+    color: var(--color-text-muted);
+    animation:
+      motion-rise 0.5s var(--ease-out) 0.9s both,
+      splash-tagline-out 0.3s var(--ease-in-out) 1.5s forwards;
+  }
+
+  @keyframes splash-tagline-out {
+    to {
+      opacity: 0;
+      translate: 0 -0.5rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    :global(.splash-active) .splash {
+      --splash-scale: 1.9;
+    }
+
+    .splash__tagline {
+      top: calc(50% + 2.25rem);
+      font-size: var(--text-sm);
+    }
+  }
+</style>

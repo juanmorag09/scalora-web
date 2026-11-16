@@ -92,7 +92,7 @@ import { withBase } from '@/lib/url';
     border-radius: 50%;
     filter: blur(80px);
     animation:
-      motion-fade 1.6s var(--ease-out) both,
+      motion-fade 1.6s var(--ease-out) var(--intro-offset) both,
       motion-drift var(--duration-ambient) var(--ease-in-out) infinite;
   }
 
@@ -201,8 +201,8 @@ import { withBase } from '@/lib/url';
     rotate: x calc(var(--py) * -6deg);
     transition: rotate 900ms var(--ease-out);
     animation:
-      motion-rise 900ms var(--ease-out) calc(450ms + var(--i) * 140ms) both,
-      motion-float 6s var(--ease-in-out) calc(1.6s + var(--i) * 0.7s) infinite;
+      motion-rise 900ms var(--ease-out) calc(var(--intro-offset) + 450ms + var(--i) * 140ms) both,
+      motion-float 6s var(--ease-in-out) calc(var(--intro-offset) + 1.6s + var(--i) * 0.7s) infinite;
   }
 
   .pillar {
