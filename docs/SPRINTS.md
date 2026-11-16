@@ -201,7 +201,8 @@ con las otras dos vías que el anexo admite: CSS (keyframes y transiciones) e
 - `src/styles/motion.css`: escala única de duraciones y curvas (tokens), revelado al
   entrar en pantalla (`data-reveal`, con variantes `mask` y `media` y escalonado por
   `--i`), entrada al cargar (`data-intro`, titulares por líneas), subrayado animado.
-- Apertura de marca en cada carga: suben las barras, aparece SCALORA y el lema, y el logo
+- Apertura de marca al entrar a la portada (una vez por visita; en el resto de cargas solo
+  suben las barras del logo de la cabecera): suben las barras, aparece SCALORA y el lema, y el logo
   vuela hasta la cabecera mientras se descubre la página (`Splash.astro`,
   `scripts/splash.ts`). Se salta con un clic, una tecla o la rueda; no aparece sin
   JavaScript ni con movimiento reducido, y si el script falla se retira sola a los 3,4 s.
@@ -239,7 +240,7 @@ con las otras dos vías que el anexo admite: CSS (keyframes y transiciones) e
 **Validación.** `motion.spec.ts` cubre sin JavaScript, script fallido, movimiento
 reducido, revelado al desplazarse, barra al desplazarse y la secuencia ligada al scroll.
 Unitarias de los cálculos en `tests/unit/motion.test.ts`. Resultado: 53 de 53 unitarias y
-101 de 101 pruebas de navegador ejecutadas (7 omitidas por no aplicar a ese tamaño).
+103 de 103 pruebas de navegador ejecutadas (7 omitidas por no aplicar a ese tamaño).
 Las pruebas de accesibilidad (axe) corren con movimiento reducido para medir el contraste
 en el estado final y no a mitad de una animación.
 

@@ -100,8 +100,40 @@ const current = Astro.url.pathname;
     opacity: 1;
   }
 
+  /* Animación sencilla de cada carga (la apertura completa solo está en la portada, la
+     primera vez): las barras del logo suben una tras otra y el nombre se desliza. */
   .site-header__brand {
-    animation: motion-fade 900ms var(--ease-out) both;
+    animation: motion-fade 600ms var(--ease-out) both;
+  }
+
+  .site-header__brand :global(.logo__bar) {
+    transform-origin: bottom;
+    animation: brand-bar 550ms var(--ease-out) both;
+  }
+
+  .site-header__brand :global(.logo__bar--2) {
+    animation-delay: 90ms;
+  }
+
+  .site-header__brand :global(.logo__bar--3) {
+    animation-delay: 180ms;
+  }
+
+  .site-header__brand :global(.logo__word) {
+    animation: brand-word 600ms var(--ease-out) 200ms both;
+  }
+
+  @keyframes brand-bar {
+    from {
+      scale: 1 0;
+    }
+  }
+
+  @keyframes brand-word {
+    from {
+      opacity: 0;
+      translate: -0.5rem 0;
+    }
   }
 
   .site-header__inner {

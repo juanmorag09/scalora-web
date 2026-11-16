@@ -7,13 +7,15 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 interface Props {
   title: string;
   description?: string | undefined;
+  /** Apertura de marca con el logo (solo la portada). */
+  splash?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, splash = false } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <Splash />
+  {splash && <Splash />}
   <Header />
   <main id="contenido">
     <slot />

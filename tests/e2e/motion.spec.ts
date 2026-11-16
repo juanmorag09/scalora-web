@@ -79,11 +79,27 @@ test.describe('apertura de marca', () => {
     await expect(page.locator('html')).not.toHaveClass(/splash-active/);
   });
 
-  test('aparece también en las páginas interiores', async ({ page }) => {
+  test('en las páginas interiores solo anima el logo de la cabecera', async ({ page }) => {
     await page.goto('/servicios/');
 
-    await expect(splash(page)).toBeVisible();
+    await expect(splash(page)).toHaveCount(0);
+    await expect(headerLogo(page)).toBeVisible();
+    const barAnimations = await page
+      .locator('.site-header__brand .logo__bar')
+      .evaluateAll((bars) => bars.map((bar) => getComputedStyle(bar).animationName));
+    expect(barAnimations.every((name) => name !== 'none')).toBe(true);
+  });
+
+  test('volver a la portada en la misma visita no la repite', async ({ page }) => {
+    await page.goto('/');
     await expect(splash(page)).toHaveCount(0, { timeout: 5000 });
+
+    await page.goto('/servicios/');
+    await page.goto('/');
+
+    await expect(page.locator('html')).not.toHaveClass(/splash-active/);
+    await expect(splash(page)).toBeHidden();
+    await expect(headerLogo(page)).toBeVisible();
   });
 
   test('una tecla la salta al instante', async ({ page }) => {

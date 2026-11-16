@@ -9,6 +9,9 @@ import { site } from '@/config/site';
 
   - Es el mismo componente <Logo /> de la cabecera, ampliado: al aterrizar coincide
     píxel a píxel con el real y el cambio no se nota.
+  - Solo está en la portada y solo la primera vez por visita (sessionStorage): volver a
+    la portada desde otra sección no la repite. El resto de cargas usan la animación
+    sencilla del logo de la cabecera (ver Header.astro).
   - Solo se activa con JavaScript y sin movimiento reducido (script de abajo, antes de
     pintar la cabecera). Sin eso, nunca aparece.
   - Si el script de movimiento fallara, una animación CSS la retira a los 3,4 s.
@@ -16,9 +19,19 @@ import { site } from '@/config/site';
 */}
 <div class="splash" data-splash aria-hidden="true">
   <script is:inline>
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('splash-active', 'splash-offset');
-    }
+    (() => {
+      const KEY = 'scalora:splash-visto';
+      let seen = false;
+      try {
+        seen = window.sessionStorage.getItem(KEY) === '1';
+        window.sessionStorage.setItem(KEY, '1');
+      } catch {
+        // Sin almacenamiento (modo privado estricto): se muestra igual.
+      }
+      if (!seen && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('splash-active', 'splash-offset');
+      }
+    })();
   </script>
   <div class="splash__backdrop" data-splash-backdrop></div>
   <div class="splash__logo" data-splash-logo>
